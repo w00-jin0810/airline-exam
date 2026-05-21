@@ -8,30 +8,30 @@
         :root[data-theme="light"] { --bg-color: #f4f6f9; --card-bg: #ffffff; --text-color: #333; --border: #ddd; }
         :root[data-theme="dark"] { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #eee; --border: #444; }
 
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; padding: 20px; }
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; padding: 20px; box-sizing: border-box; }
 
         /* 인트로 스타일 */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; }
-        #logo-btn { width: 300px; cursor: pointer; }
+        #logo-btn { width: 300px; cursor: pointer; transition: 0.3s; }
+        #logo-btn:hover { transform: scale(1.05); }
         
-        /* 로고 슬라이드 */
-        .marquee-container { width: 100%; max-width: 800px; overflow: hidden; margin-top: 50px; padding: 20px 0; }
-        .marquee-track { display: flex; gap: 40px; animation: scroll 20s linear infinite; align-items: center; white-space: nowrap; }
-        .marquee-track img { height: 40px; object-fit: contain; }
+        /* 로고 슬라이드: 크기 키우고 서로 붙게 함 */
+        .marquee-container { width: 100%; overflow: hidden; margin-top: auto; padding: 40px 0; }
+        .marquee-track { display: flex; gap: 80px; animation: scroll 25s linear infinite; align-items: center; white-space: nowrap; }
+        .marquee-track img { height: 70px; object-fit: contain; } /* 로고 크기 확대 */
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* 메인 화면 스타일 */
         #main-content { display:none; width: 100%; flex-direction: column; align-items: center; }
         header { text-align: center; margin: 40px 0; position: relative; max-width: 600px; width: 100%; }
+        h1 { margin: 0; font-size: 2.5em; }
         .settings-icon { position: absolute; top: 10px; right: 0; cursor: pointer; font-size: 24px; }
         .card { background: var(--card-bg); padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
         select { padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-color); }
         .btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
         
-        /* 모달 스타일 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; }
-        .config-group { margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -42,16 +42,16 @@
         <div class="marquee-container">
             <div class="marquee-track">
                 <img src="JEJU AIR.png" alt="제주항공"><img src="EASTAR JET.png" alt="이스타항공"><img src="KOREAN AIR.png" alt="대한항공"><img src="T WAY.jpg" alt="티웨이항공"><img src="AIR INCHEON.jpg" alt="에어인천"><img src="JINAIR.png" alt="진에어"><img src="ASIANA AIRLINES.png" alt="아시아나항공"><img src="AIRSEOUL.jpg" alt="에어서울">
-                <img src="JEJU AIR.png" alt="제주항공"><img src="EASTAR JET.png" alt="이스타항공"><img src="KOREAN AIR.png" alt="대한항공"><img src="T WAY.jpg" alt="티웨이항공">
+                <img src="JEJU AIR.png" alt="제주항공"><img src="EASTAR JET.png" alt="이스타항공"><img src="KOREAN AIR.png" alt="대한항공"><img src="T WAY.jpg" alt="티웨이항공"><img src="AIR INCHEON.jpg" alt="에어인천"><img src="JINAIR.png" alt="진에어"><img src="ASIANA AIRLINES.png" alt="아시아나항공"><img src="AIRSEOUL.jpg" alt="에어서울">
             </div>
         </div>
     </div>
 
     <div id="main-content">
         <header>
+            <div class="settings-icon" onclick="toggleModal()">⚙️</div>
             <h1>CDU 학술부</h1>
             <div class="sub-title">(항공사 기출 문제)</div>
-            <div class="settings-icon" onclick="toggleModal()">⚙️</div>
         </header>
 
         <div class="card">
@@ -67,18 +67,8 @@
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <h3>⚙️ 환경 설정</h3>
-            <div class="config-group">
-                <button class="btn" style="background:#6c757d;" onclick="toggleTheme()">☀️/🌙 테마 변경</button>
-            </div>
-            <div class="config-group">
-                <label>화면 너비 조절 (<span id="width-val">1000</span>px):</label>
-                <input type="range" style="width:100%" min="600" max="1600" value="1000" oninput="adjustWidth(this.value)">
-            </div>
-            <div class="config-group">
-                <label>글자 크기 조절 (<span id="font-val">18</span>px):</label>
-                <input type="range" style="width:100%" min="14" max="28" value="18" oninput="adjustFont(this.value)">
-            </div>
-            <button class="btn" style="background:#333;" onclick="toggleModal()">설정 완료 및 닫기</button>
+            <button class="btn" style="background:#6c757d;" onclick="toggleTheme()">☀️/🌙 테마 변경</button>
+            <button class="btn" style="background:#333;" onclick="toggleModal()">닫기</button>
         </div>
     </div>
 
@@ -86,18 +76,17 @@
         function startApp() { document.getElementById('intro-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'flex'; }
         function toggleModal() { const m = document.getElementById('settings-modal'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
         function toggleTheme() { document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
-        function adjustWidth(val) { document.body.style.maxWidth = val + 'px'; document.getElementById('width-val').innerText = val; }
-        function adjustFont(val) { document.body.style.fontSize = val + 'px'; document.getElementById('font-val').innerText = val; }
         
+        // 한글 이름으로 데이터 변경
         const airlineData = {
-            JejuAir: ["2016년 1차", "2017년 1차", "2017년 2차", "2017년 3차", "2018년 1차", "2018년 2차", "2025년 1차"],
-            EastarJet: ["2016년 1차"],
-            KoreanAir: ["연도 불명 1차", "연도 불명 2차", "연도 불명 3차", "연도 불명 4차", "연도 불명 5차", "연도 불명 6차", "연도 불명 7차", "연도 불명 8차", "연도 불명 9차", "연도 불명 10차", "2025년 1차", "2025년 2차"],
-            TwayAir: ["2015년 1차", "2015년 2차", "2017년 1차", "2017년 2차", "2018년 1차", "2018년 2차", "2024년 1차", "연도 불명 1차", "연도 불명 2차", "연도 불명 3차"],
-            AirIncheon: ["2024년 2차", "연도 불명 1차"],
-            JinAir: ["2025년 1차"],
-            Asiana: ["2018년 1차"],
-            AirSeoul: ["연도 불명 1차"]
+            "제주항공": ["2016년 1차", "2017년 1차", "2017년 2차", "2017년 3차", "2018년 1차", "2018년 2차", "2025년 1차"],
+            "이스타항공": ["2016년 1차"],
+            "대한항공": ["연도 불명 1차", "연도 불명 2차", "연도 불명 3차", "연도 불명 4차", "연도 불명 5차", "연도 불명 6차", "연도 불명 7차", "연도 불명 8차", "연도 불명 9차", "연도 불명 10차", "2025년 1차", "2025년 2차"],
+            "티웨이항공": ["2015년 1차", "2015년 2차", "2017년 1차", "2017년 2차", "2018년 1차", "2018년 2차", "2024년 1차", "연도 불명 1차", "연도 불명 2차", "연도 불명 3차"],
+            "에어인천": ["2024년 2차", "연도 불명 1차"],
+            "진에어": ["2025년 1차"],
+            "아시아나항공": ["2018년 1차"],
+            "에어서울": ["연도 불명 1차"]
         };
 
         const airlineSelect = document.getElementById('airline-select');
