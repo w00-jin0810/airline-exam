@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>항공사 기출문제 프로그램</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; background-color: #f9f9f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .option { display: block; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #fff; }
+        .option:hover { background: #f0f0f0; }
+        .option.correct { background-color: #d4edda; border-color: #c3e6cb; color: #155724; font-weight: bold; }
+        .option.wrong { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .explanation { background: #e2f0fe; padding: 15px; border-radius: 4px; margin-top: 10px; display: none; color: #004085; }
+        .btn { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn:hover { background: #0056b3; }
+        .hidden { display: none; }
+        select { padding: 8px; font-size: 16px; margin-right: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>✈️ 항공사 기출문제 시뮬레이터</h1>
+    
+    <div id="setup-section" class="card">
+        <h3>설정 선택</h3>
+        <label>항공사: </label>
+        <select id="airline-select" onchange="updateYearOptions()">
+            <option value="JejuAir">제주항공</option>
+            <option value="EastarJet">이스타항공</option>
+            <option value="KoreanAir">대한항공</option>
+            <option value="TwayAir">티웨이항공</option>
+            <option value="AirIncheon">에어인천</option>
+            <option value="JinAir">진에어</option>
+            <option value="Asiana">아시아나항공</option>
+            <option value="AirSeoul">에어서울</option>
+        </select>
+        
+        <label>연도 및 차수: </label>
+        <select id="year-select">
+            </select>
+        
+        <div style="margin-top: 20px;">
+            <button class="btn" onclick="startQuiz('practice')">✏️ 한 문제씩 학습 모드</button>
+            <button class="btn" style="background:#28a745" onclick="startQuiz('exam')">⏱️ 실전 모의고사 모드</button>
+        </div>
+    </div>
+
+    <div id="quiz-section" class="hidden">
+        <h2 id="mode-title"></h2>
+        <div id="question-container"></div>
+        <button id="submit-exam-btn" class="btn" style="background:#28a745; display:none;" onclick="gradeExam()">제출 및 채점하기</button>
+        <button class="btn" style="background:#6c757d; margin-top: 20px;" onclick="location.reload()">메인으로 돌아가기</button>
+    </div>
+
+    <script>
+        // 항공사별 대화형 맵핑 데이터
+        const airlineDataMap = {
+            JejuAir: ["2016년 1차", "2017년 1차", "2017년 2차", "2017년 3차", "2018년 1차", "2018년 2차", "2025년 1차"],
+            EastarJet: ["2016년 1차"],
+            KoreanAir: ["연도 불명 1차", "연도 불명 2차", "연도 불명 3차", "연도 불명 4차", "연도 불명 5차", "연도 불명 6차", "연도 불명 7차", "연도 불명 8차", "연도 불명 9차", "연도 불명 10차", "2025년 1차", "2025년 2차"],
+            TwayAir: ["2015년 1차", "2015년 2차", "2017년 1차", "2017년 2차", "2018년 1차", "2018년 2차", "2024년 1차", "연도 불명 1차", "연도 불명 2차", "연도 불명 3차"],
+            AirIncheon: ["2024년 2차", "연도 불명 1차"],
+            JinAir: ["2025년 1차"],
+            Asiana: ["2018년 1차"],
+            AirSeoul: ["연도 불명 1차"]
+        };
+
+        // 항공사를 바꿀 때마다 연도 선택창을 새로고침해주는 함수
+        function updateYearOptions() {
+            const airline = document.getElementById('airline-select').value;
+            const yearSelect = document.getElementById('year-select');
+            yearSelect.innerHTML = ''; // 기존 옵션 초기화
+            
+            const options = airlineDataMap[airline] || [];
+            options.forEach(opt => {
+                const optionNode = document.createElement('option');
+                optionNode.value = opt;
+                optionNode.innerText = opt;
+                yearSelect.appendChild(optionNode);
+            });
+        }
+
+        // 페이지 처음 켜졌을 때 초기화 실행
+        window.onload = function() {
+            updateYearOptions();
+        };
+
+        let currentQuestions = [];
+        let currentMode = '';
+        let userAnswers = {};
+
+        async function startQuiz(mode) {
+            currentMode = mode;
+            const airline = document.getElementById('airline-select').value;
+            const selectedTarget = document.getElementById('year-select').value;
+            
+            const response = await fetch(`/api/questions`);
+            const allData = await response.json();
+            
+            // 1순위: 내 questions.json 구조에 완전히 매칭되는 데이터가 있는지 확인
+            if (allData[airline] && allData[airline][selectedTarget]) {
+                currentQuestions = allData[airline][selectedTarget];
+            } 
+            // 2순위: 혹은 데이터에 "2025"처럼 단순 연도만 적혀있을 경우를 대비한 안전망 코드
+            else if (allData[airline]) {
+                const extractYear = selectedTarget.split(' ')[0]; // 예: "2025년" -> "2025년" 추출
+                const cleanYear = extractYear.replace('년', ''); // "2025"
+                currentQuestions = allData[airline][cleanYear] || allData[airline][selectedTarget] || [];
+                
+                // 3순위: 그것도 없다면 해당 항공사에 들어있는 첫 번째 문제 데이터를 임시로 연결
+                if (currentQuestions.length === 0 && Object.keys(allData[airline]).length > 0) {
+                    const firstKey = Object.keys(allData[airline])[0];
+                    currentQuestions = allData[airline][firstKey];
+                }
+            } else {
+                currentQuestions = [];
+            }
+            
+            if (!currentQuestions || currentQuestions.length === 0) {
+                alert("해당 카테고리에 등록된 기출문제가 없습니다! \n(questions.json 파일 내의 이름 설정을 확인해 주세요)");
+                return;
+            }
+
+            document.getElementById('setup-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.remove('hidden');
+            document.getElementById('mode-title').innerText = mode === 'practice' ? '✏️ 한 문제씩 학습 모드' : '⏱️ 실전 모의고사 모드';
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('question-container');
+            container.innerHTML = '';
+            userAnswers = {};
+            
+            currentQuestions.forEach((q, qIndex) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'card';
+                qCard.id = `question-${qIndex}`;
+                qCard.innerHTML = `<h4>Q${qIndex + 1}. ${q.question}</h4>`;
+                
+                q.options.forEach((option, oIndex) => {
+                    const optIdx = oIndex + 1;
+                    const optButton = document.createElement('div');
+                    optButton.className = `option opt-${qIndex}`;
+                    optButton.innerText = option;
+                    optButton.onclick = () => selectOption(qIndex, optIdx, optButton);
+                    qCard.appendChild(optButton);
+                });
+                
+                const expDiv = document.createElement('div');
+                expDiv.className = 'explanation';
+                expDiv.id = `explanation-${qIndex}`;
+                expDiv.innerText = `💡 정답: ${q.answer}번 \n\n해설: ${q.explanation}`;
+                qCard.appendChild(expDiv);
+                container.appendChild(qCard);
+            });
+            
+            if (currentMode === 'exam') {
+                document.getElementById('submit-exam-btn').style.display = 'block';
+            } else {
+                document.getElementById('submit-exam-btn').style.display = 'none';
+            }
+        }
+
+        function selectOption(qIndex, selectedIdx, optElement) {
+            if (currentMode === 'practice') {
+                const correctAnswer = currentQuestions[qIndex].answer;
+                const options = document.querySelectorAll(`.opt-${qIndex}`);
+                options.forEach(opt => opt.style.pointerEvents = 'none');
+                if (selectedIdx === correctAnswer) {
+                    optElement.classList.add('correct');
+                } else {
+                    optElement.classList.add('wrong');
+                    options[correctAnswer - 1].classList.add('correct');
+                }
+                document.getElementById(`explanation-${qIndex}`).style.display = 'block';
+            } else {
+                const options = document.querySelectorAll(`.opt-${qIndex}`);
+                options.forEach(opt => opt.classList.remove('wrong'));
+                optElement.classList.add('wrong');
+                userAnswers[qIndex] = selectedIdx;
+            }
+        }
+
+        function gradeExam() {
+            let score = 0;
+            currentQuestions.forEach((q, qIndex) => {
+                const chosen = userAnswers[qIndex];
+                const correct = q.answer;
+                const options = document.querySelectorAll(`.opt-${qIndex}`);
+                options.forEach(opt => opt.style.pointerEvents = 'none');
+                options.forEach(opt => opt.classList.remove('wrong'));
+                if (chosen === correct) {
+                    score++;
+                    if(chosen) options[chosen - 1].classList.add('correct');
+                } else {
+                    if(chosen) options[chosen - 1].classList.add('wrong');
+                    options[correct - 1].classList.add('correct');
+                }
+                document.getElementById(`explanation-${qIndex}`).style.display = 'block';
+            });
+            alert(`🎉 시험이 종료되었습니다! \n점수: ${score} / ${currentQuestions.length} 문제 맞춤`);
+            document.getElementById('submit-exam-btn').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>

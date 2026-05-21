@@ -1,0 +1,177 @@
+{
+  "KoreanAir": {
+    "2025": [
+      {
+        "id": 1,
+        "question": "The control zone is the area extending from the surface of land or water up to ( ) specified by ordinance of the MLTM defined at?",
+        "options": ["A. 100m", "B. 200m", "C. 300m", "D. 400m"],
+        "answer": 3,
+        "explanation": "관제권(Control Zone)은 비행장 및 그 주변의 공역으로서 항공교통의 안전을 위해 국토교통부장관이 지정한 공역이며, 통상 지표면 또는 수면으로부터 300미터(또는 특정 고도)까지의 공역을 의미합니다."
+      },
+      {
+        "id": 2,
+        "question": "What is Annex 14 of Convention on International Civil aviation prescribing?",
+        "options": ["A. Environmental protection", "B. Aerodromes", "C. Security", "D. Search and Rescue"],
+        "answer": 2,
+        "explanation": "ICAO Annex 14는 'Aerodromes(비행장)'의 설계, 운영 및 기술 기준을 규정하고 있는 부속서입니다."
+      },
+      {
+        "id": 3,
+        "question": "Minimum height or obstruction clearance for IFR in non-mountainous terrain?",
+        "options": [
+          "1. 300 meters and radius of 8 KM from the airway centerline.",
+          "2. 600 meters and radius of 8 KM from the airway centerline.",
+          "3. 300 meters and radius of 8 NM from the airway centerline.",
+          "4. 600 meters and radius of 8 NM from the airway centerline."
+        ],
+        "answer": 3,
+        "explanation": "평지(Non-mountainous terrain)에서의 계기비행(IFR) 최소 장애물 회피 높이(MOCA) 기준은 항로 중심선으로부터 반경 8해리(NM) 이내의 가장 높은 장애물 위로 300미터(1,000피트)의 여유를 두어야 합니다."
+      },
+      {
+        "id": 4,
+        "question": "Minimum height or obstruction clearance for IFR in mountainous terrain?",
+        "options": [
+          "1. 300 meters and radius of 8 KM from the airway centerline.",
+          "2. 600 meters and radius of 8 KM from the airway centerline.",
+          "3. 300 meters and radius of 8 NM from the airway centerline.",
+          "4. 600 meters and radius of 8 NM from the airway centerline."
+        ],
+        "answer": 4,
+        "explanation": "산악지역(Mountainous terrain)에서의 계기비행(IFR) 최소 장애물 회피 높이는 항로 중심선으로부터 반경 8해리(NM) 이내에서 가장 높은 장애물 위로 600미터(2,000피트)의 여유를 두어야 합니다."
+      },
+      {
+        "id": 5,
+        "question": "Which aircraft must be registered?",
+        "options": [
+          "A. Aircraft used in military, customs, or police services",
+          "B. Aircraft used in forest Service",
+          "C. An aircraft owned by a Korean company, leased to a foreign company",
+          "D. An aircraft which is manufactured in Korea, but the owner is yet to be determined"
+        ],
+        "answer": 2,
+        "explanation": "군용, 세관, 경찰용 항공기는 국가항공기로서 일반 민간항공기 등록 대상에서 제외(또는 별도 관리)되나, 산림청 항공기(B) 등 일반 관공서 항공기는 항공안전법에 따른 등록 대상에 포함됩니다."
+      },
+      {
+        "id": 6,
+        "question": "What is the meaning of a flashing white light on the ground?",
+        "options": [
+          "A. Continue circling",
+          "B. Return to starting point on the airport",
+          "C. Give way to other aircraft",
+          "D. Stop"
+        ],
+        "answer": 2,
+        "explanation": "지상에 있는 항공기에게 내려지는 백색 간헐광(Flashing White) 신호는 '비행장의 출발 지점으로 돌아가라(Return to starting point on the airport)'는 의미입니다."
+      },
+      {
+        "id": 7,
+        "question": "Which convention deals with the unlawful interference and seizure of aircraft?",
+        "options": ["A. Hague", "B. Montreal", "C. Tokyo", "D. Chicago"],
+        "answer": 1,
+        "explanation": "항공기 불법 납치(Seizure of aircraft) 및 불법 공중납치 억제를 다루는 국제 협약은 헤이그 협약(Hague Convention)입니다."
+      },
+      {
+        "id": 8,
+        "question": "Visibility requirements in Class E airspace for flight above 10,000ft MSL?",
+        "options": ["A. 3000m", "B. 5000m", "C. 8000m", "D. 10,000m"],
+        "answer": 3,
+        "explanation": "E등급 공역 중 해면고도(MSL) 10,000피트 이상에서의 시정 요건은 8,000m(8km) 이상이어야 합니다."
+      },
+      {
+        "id": 9,
+        "question": "When do you apply for Noise certificate?",
+        "options": [
+          "A. After obtaining certificate of Airworthiness",
+          "B. At the same time you are applying for the Certificate of Airworthiness",
+          "C. Not required – automatically given",
+          "D. Before the Airworthiness Certificate"
+        ],
+        "answer": 2,
+        "explanation": "소음기준적합증명(Noise Certificate)은 통상 감항증명(Certificate of Airworthiness)을 신청할 때 동시에 신청하여 검사를 받게 됩니다."
+      },
+      {
+        "id": 10,
+        "question": "What is not true with regards to articles of ICAO?",
+        "options": [
+          "A. This Convention shall be applicable to civil aircraft and state aircraft.",
+          "B. Aircraft used in military, customs and police services shall be deemed to be state aircraft.",
+          "C. No state aircraft of a contracting State shall fly over the territory of another State or land thereon without authorization by special agreement or otherwise, and in accordance with the terms thereof.",
+          "D. The contracting States undertake, when issuing regulations for their state aircraft, that they will have due regard for the safety of navigation of civil aircraft."
+        ],
+        "answer": 1,
+        "explanation": "ICAO 시카고 조약 제3조(a)에 따르면, 본 조약은 '민간항공기(Civil aircraft)'에만 적용되며 '국가항공기(State aircraft)'에는 적용되지 않습니다. 따라서 A가 잘못된 설명입니다."
+      },
+      {
+        "id": 11,
+        "question": "항공법이 규정하는 항공종사자라 함은?",
+        "options": [
+          "1. 항행안전시설의 보수업무에 종사하는 자",
+          "2. 국토교통부장관이 지정한 전문교육기관을 이수한 자",
+          "3. 항공안전법(구 항공법) 규정에 의한 자격증명을 받은 자",
+          "4. 국가기술자격증명 소지자"
+        ],
+        "answer": 3,
+        "explanation": "항공법(현 항공안전법)상 '항공종사자'란 항공종사자 자격증명(License)을 받은 사람을 의미합니다."
+      },
+      {
+        "id": 12,
+        "question": "다음 중 비행장이란?",
+        "options": [
+          "A. 항공기의 이륙 또는 착륙을 위하여 사용되는 육지 또는 수면",
+          "B. 항공기가 이륙 또는 착륙하는 활주로와 유도로",
+          "C. 항공기를 계류시킬 수 있는 곳",
+          "D. 항공기에 승객을 탑승 시킬 수 있는 곳"
+        ],
+        "answer": 1,
+        "explanation": "비행장이란 항공기·경량항공기·초경량비행장치의 이륙 또는 착륙을 위하여 사용되는 육지 또는 수면의 지정된 구역을 말합니다."
+      },
+      {
+        "id": 13,
+        "question": "항공기에 탑승한 승객이 소란행위, 흡연, 전자기기 사용 금지 등을 위반했을 때 근거가 되는 법률과 처벌 수위는?",
+        "options": [
+          "A. 항공법 시행규칙, 100만원 이하 벌금",
+          "B. 운영기준, 500만원 이하 벌금",
+          "C. 항공보안법, 500만원(기내흡연/소란행위 내용에 따라 벌금 또는 과태료 금액 상이)",
+          "D. 항공법, 100만원 이하 벌금"
+        ],
+        "answer": 3,
+        "explanation": "승객의 기내 안전유지 의무 및 불법 행위 금지는 '항공보안법(항공 안전 및 보안에 관한 법률)'에 근거하고 있습니다."
+      },
+      {
+        "id": 14,
+        "question": "항공기 안전운항을 위한 기술기준으로, 장비, 운항, 자격증명 등의 내용을 고시한 기준은?",
+        "options": ["A. 운영기준", "B. 항공운송사업자의 운항증명", "C. F O T M", "D. 운항기술기준"],
+        "answer": 4,
+        "explanation": "국토교통부장관이 고시한 항공기 계기, 장비, 운항 규칙 등의 구체적인 기술 기준을 '운항기술기준(Flight Operations Technical Standards)'이라고 합니다."
+      },
+      {
+        "id": 15,
+        "question": "다음 중 항공기의 종류(Type/Category)에 해당되는 것은?",
+        "options": [
+          "A. 육상단발·다발, 수상단발·다발",
+          "B. 비행기, 비행선, 활공기, 회전익항공기, 항공우주선",
+          "C. B747, DC-10, MD-11",
+          "D. 상급 및 중급항공기"
+        ],
+        "answer": 2,
+        "explanation": "항공안전법상 '항공기의 종류'는 비행기, 비행선, 활공기, 회전익항공기, 항공우주선 등으로 대분류됩니다. A는 한정(Rating) 분류에 가깝고, C는 형식(Type)입니다."
+      },
+      {
+        "id": 16,
+        "question": "다음 중 자격증명이 반드시 취소되는 필수적 취소 사유는?",
+        "options": [
+          "A. 벌금 이상의 형의 선고를 받을 때",
+          "B. 운항기술기준을 지키지 아니하고 비행하거나 업무를 한 때",
+          "C. 항공업무를 수행할 때 고의 또는 중대한 과실에 따른 인명/재산피해를 발생하게 한 때",
+          "D. 자격증명의 효력정지기간 중에 항공업무에 종사한 때"
+        ],
+        "answer": 4,
+        "explanation": "자격증명 효력정지 기간 중에 항공업무에 종사한 경우나 부정한 방법으로 자격증명을 취득한 경우는 법적으로 자격증명을 '반드시 취소'해야 하는 절대적 취소 사유입니다."
+      }
+    ],
+    "2026": []
+  },
+  "Asiana": {
+    "2025": []
+  }
+}
