@@ -8,11 +8,21 @@
         :root[data-theme="light"] { --bg-color: #f4f6f9; --card-bg: #ffffff; --text-color: #333; --border: #ddd; }
         :root[data-theme="dark"] { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #eee; --border: #444; }
 
+        /* 인트로 스타일 */
+        #intro-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 200;
+        }
+        #logo-btn { width: 300px; cursor: pointer; transition: 0.3s; }
+        #logo-btn:hover { transform: scale(1.05); }
+
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
         
+        /* 타이틀 배치 (요청 사항 반영) */
         header { text-align: center; margin: 40px 0; width: 100%; position: relative; max-width: 600px; }
-        h1 { margin: 0; font-size: 2em; }
-        .sub-title { font-size: 1.1em; color: #888; margin-top: 5px; }
+        h1 { margin: 0; font-size: 2.5em; }
+        .sub-title { font-size: 1.3em; color: #888; margin-top: 5px; }
         .settings-icon { position: absolute; top: 10px; right: 0; cursor: pointer; font-size: 24px; }
 
         .card { background: var(--card-bg); padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; margin-bottom: 20px; }
@@ -20,7 +30,6 @@
         select { padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-color); }
         .btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; }
         
-        /* 모달 스타일 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 450px; }
         .config-group { margin-bottom: 25px; }
@@ -28,31 +37,40 @@
 </head>
 <body>
 
-    <header>
-        <h1>CDU 학술부</h1>
-        <div class="sub-title">(항공사 기출 문제)</div>
-        <div class="settings-icon" onclick="toggleModal()">⚙️</div>
-    </header>
+    <div id="intro-screen">
+        <img id="logo-btn" src="KakaoTalk_20260522_000027464.png" onclick="startApp()" alt="로고">
+        <p style="margin-top: 20px; font-size: 1.1em; color: #555; font-weight: bold;">
+            로고를 클릭하여 시작하세요
+        </p>
+    </div>
 
-    <div class="card">
-        <h3>설정 선택</h3>
-        <label>항공사:</label>
-        <select id="airline-select" onchange="updateYearOptions()">
-            <option value="JejuAir">제주항공</option>
-            <option value="EastarJet">이스타항공</option>
-            <option value="KoreanAir">대한항공</option>
-            <option value="TwayAir">티웨이항공</option>
-            <option value="AirIncheon">에어인천</option>
-            <option value="JinAir">진에어</option>
-            <option value="Asiana">아시아나항공</option>
-            <option value="AirSeoul">에어서울</option>
-        </select>
-        
-        <label>연도 및 차수:</label>
-        <select id="year-select"></select>
-        
-        <button class="btn" style="background:#007bff;" onclick="alert('문제 모드 시작')">✏️ 한 문제씩 학습 모드</button>
-        <button class="btn" style="background:#28a745;" onclick="alert('모의고사 모드 시작')">⏱️ 실전 모의고사 모드</button>
+    <div id="main-content" style="display:none; width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <header>
+            <h1>CDU 학술부</h1>
+            <div class="sub-title">(항공사 기출 문제)</div>
+            <div class="settings-icon" onclick="toggleModal()">⚙️</div>
+        </header>
+
+        <div class="card">
+            <h3>설정 선택</h3>
+            <label>항공사:</label>
+            <select id="airline-select" onchange="updateYearOptions()">
+                <option value="JejuAir">제주항공</option>
+                <option value="EastarJet">이스타항공</option>
+                <option value="KoreanAir">대한항공</option>
+                <option value="TwayAir">티웨이항공</option>
+                <option value="AirIncheon">에어인천</option>
+                <option value="JinAir">진에어</option>
+                <option value="Asiana">아시아나항공</option>
+                <option value="AirSeoul">에어서울</option>
+            </select>
+            
+            <label>연도 및 차수:</label>
+            <select id="year-select"></select>
+            
+            <button class="btn" style="background:#007bff;" onclick="alert('문제 모드 시작')">✏️ 한 문제씩 학습 모드</button>
+            <button class="btn" style="background:#28a745;" onclick="alert('모의고사 모드 시작')">⏱️ 실전 모의고사 모드</button>
+        </div>
     </div>
 
     <div id="settings-modal" class="modal">
@@ -74,6 +92,13 @@
     </div>
 
     <script>
+        function startApp() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+            document.getElementById('main-content').style.flexDirection = 'column';
+            document.getElementById('main-content').style.alignItems = 'center';
+        }
+
         const airlineData = {
             JejuAir: ["2016년 1차", "2017년 1차", "2017년 2차", "2017년 3차", "2018년 1차", "2018년 2차", "2025년 1차"],
             EastarJet: ["2016년 1차"],
@@ -112,7 +137,6 @@
             document.getElementById('font-val').innerText = val;
         }
 
-        updateYearOptions(); // 초기 실행
+        updateYearOptions();
     </script>
 </body>
-</html>
