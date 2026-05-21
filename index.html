@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="ko" data-theme="light">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>항공사 기출문제 프로그램</title>
     <style>
-        /* 기본 테마 변수 설정 (화이트모드 기본) */
+        /* 기본 테마 변수 설정 (화이트모드) */
         :root[data-theme="light"] {
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
@@ -14,6 +15,7 @@
             --option-hover: #f1f3f5;
             --explanation-bg: #e8f4fd;
             --explanation-text: #004085;
+            --panel-bg: #e9ecef;
         }
         
         /* 다크모드 변수 설정 */
@@ -25,11 +27,12 @@
             --option-hover: #2a2a2a;
             --explanation-bg: #1c2d3d;
             --explanation-text: #90caf9;
+            --panel-bg: #2d2d2d;
         }
 
         body { 
             font-family: 'Malgun Gothic', sans-serif; 
-            max-width: 1200px; /* 💡 화면 최대 크기를 800px에서 1200px로 대폭 확장! */
+            max-width: 1000px; /* 기본값 */
             margin: 40px auto; 
             padding: 20px; 
             line-height: 1.7; 
@@ -38,43 +41,63 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* 헤더 영역 스타일 */
-        .header-container {
+        /* 디스플레이 설정 패널 스타일 */
+        .config-panel {
+            background: var(--panel-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
             align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
+            justify-content: space-between;
+            font-size: 15px;
         }
 
-        h1 { font-size: 32px; margin: 0; } /* 💡 타이틀 글자 크기 업 */
+        .config-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-group label {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        h1 { font-size: 28px; margin: 0 0 15px 0; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
 
         .card { 
             background: var(--card-bg); 
-            padding: 30px; /* 💡 여백을 넓혀서 시원하게 */
+            padding: 25px; 
             border-radius: 12px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
             margin-bottom: 25px; 
         }
 
-        h3 { font-size: 24px; margin-top: 0; }
-        h4 { font-size: 22px; margin-top: 0; margin-bottom: 20px; } /* 💡 문제 글자 크기 업 */
-        label { font-size: 18px; font-weight: bold; margin-right: 10px; }
+        h3 { font-size: 1.35em; margin-top: 0; }
+        h4 { font-size: 1.25em; margin-top: 0; margin-bottom: 20px; }
+        .setup-label { font-size: 1em; font-weight: bold; margin-right: 10px; }
 
         .option { 
             display: block; 
             margin: 14px 0; 
-            padding: 16px; /* 💡 선택지 클릭 영역 확장 */
+            padding: 14px; 
             border: 1px solid var(--border-color); 
             border-radius: 6px; 
             cursor: pointer; 
             background: var(--card-bg); 
             color: var(--text-color);
-            font-size: 18px; /* 💡 보기 글자 크기 업 */
+            font-size: 1em; 
             transition: all 0.2s;
         }
-        .option:hover { background: var(--option-hover); padding-left: 22px; }
+        .option:hover { background: var(--option-hover); padding-left: 20px; }
 
         .option.correct { background-color: #2b8a3e !important; border-color: #2b8a3e; color: #ffffff !important; font-weight: bold; }
         .option.wrong { background-color: #c92a2a !important; border-color: #c92a2a; color: #ffffff !important; }
@@ -82,11 +105,11 @@
         .explanation { 
             background: var(--explanation-bg); 
             color: var(--explanation-text);
-            padding: 20px; 
+            padding: 18px; 
             border-radius: 6px; 
             margin-top: 15px; 
             display: none; 
-            font-size: 18px; /* 💡 해설 글자 크기 업 */
+            font-size: 1em; 
             white-space: pre-wrap;
         }
 
@@ -94,39 +117,54 @@
             background: #007bff; 
             color: white; 
             border: none; 
-            padding: 12px 24px; 
+            padding: 10px 20px; 
             border-radius: 6px; 
             cursor: pointer; 
-            font-size: 18px; 
+            font-size: 16px; 
             font-weight: bold;
         }
         .btn:hover { background: #0056b3; }
         
-        /* 테마 전환 버튼 스타일 */
         .theme-toggle-btn {
             background: #6c757d;
             color: white;
             border: none;
-            padding: 10px 18px;
+            padding: 8px 15px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
         }
 
         .hidden { display: none; }
-        select { padding: 10px; font-size: 18px; margin-right: 15px; margin-bottom: 15px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); }
+        select { padding: 8px; font-size: 16px; margin-right: 15px; margin-bottom: 15px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); }
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <h1>✈️ CDU 항공사 기출문제 시뮬레이터</h1>
-        <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">🌙 다크모드 보기</button>
+
+    <h1>✈️ CDU 항공사 기출문제 시뮬레이터</h1>
+
+    <div class="config-panel">
+        <div class="config-group">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">🌙 다크모드 켜기</button>
+        </div>
+        
+        <div class="config-group">
+            <label for="width-slider">🖥️ 화면 너비 조절:</label>
+            <input type="range" id="width-slider" min="600" max="1600" value="1000" step="50" oninput="adjustWidth(this.value)">
+            <span id="width-val">1000px</span>
+        </div>
+
+        <div class="config-group">
+            <label for="font-slider">🔤 글자 크기 조절:</label>
+            <input type="range" id="font-slider" min="14" max="28" value="18" step="1" oninput="adjustFont(this.value)">
+            <span id="font-val">18px</span>
+        </div>
     </div>
     
     <div id="setup-section" class="card">
         <h3>설정 선택</h3>
-        <label>항공사: </label>
+        <label class="setup-label">항공사: </label>
         <select id="airline-select" onchange="updateYearOptions()">
             <option value="JejuAir">제주항공</option>
             <option value="EastarJet">이스타항공</option>
@@ -138,40 +176,57 @@
             <option value="AirSeoul">에어서울</option>
         </select>
         
-        <label>연도 및 차수: </label>
-        <select id="year-select">
-            </select>
+        <label class="setup-label">연도 및 차수: </label>
+        <select id="year-select"></select>
         
-        <div style="margin-top: 25px;">
+        <div style="margin-top: 20px;">
             <button class="btn" onclick="startQuiz('practice')">✏️ 한 문제씩 학습 모드</button>
             <button class="btn" style="background:#28a745" onclick="startQuiz('exam')">⏱️ 실전 모의고사 모드</button>
         </div>
     </div>
 
     <div id="quiz-section" class="hidden">
-        <h2 id="mode-title" style="font-size: 26px; margin-bottom: 20px;"></h2>
+        <h2 id="mode-title" style="font-size: 1.5em; margin-bottom: 20px;"></h2>
         <div id="question-container"></div>
         <button id="submit-exam-btn" class="btn" style="background:#28a745; display:none; width: 100%; margin-bottom: 15px;" onclick="gradeExam()">제출 및 채점하기</button>
         <button class="btn" style="background:#6c757d; width: 100%;" onclick="location.reload()">메인으로 돌아가기</button>
     </div>
 
     <script>
-        // 테마 토글 함수
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', targetTheme);
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('cdu-quiz-theme', theme);
             
             const btn = document.getElementById('theme-btn');
-            if (targetTheme === 'dark') {
-                btn.innerText = '☀️ 화이트모드 보기';
+            if (theme === 'dark') {
+                btn.innerText = '☀️ 화이트모드 켜기';
                 btn.style.background = '#f8f9fa';
                 btn.style.color = '#333333';
             } else {
-                btn.innerText = '🌙 다크모드 보기';
+                btn.innerText = '🌙 다크모드 켜기';
                 btn.style.background = '#6c757d';
                 btn.style.color = 'white';
             }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(targetTheme);
+        }
+
+        function adjustWidth(val) {
+            document.body.style.maxWidth = val + 'px';
+            document.getElementById('width-val').innerText = val + 'px';
+            document.getElementById('width-slider').value = val;
+            localStorage.setItem('cdu-quiz-width', val);
+        }
+
+        function adjustFont(val) {
+            document.body.style.fontSize = val + 'px';
+            document.getElementById('font-val').innerText = val + 'px';
+            document.getElementById('font-slider').value = val;
+            localStorage.setItem('cdu-quiz-font', val);
         }
 
         const airlineDataMap = {
@@ -201,6 +256,15 @@
 
         window.onload = function() {
             updateYearOptions();
+            
+            const savedTheme = localStorage.getItem('cdu-quiz-theme') || 'light';
+            applyTheme(savedTheme);
+            
+            const savedWidth = localStorage.getItem('cdu-quiz-width') || '1000';
+            adjustWidth(savedWidth);
+            
+            const savedFont = localStorage.getItem('cdu-quiz-font') || '18';
+            adjustFont(savedFont);
         };
 
         let currentQuestions = [];
@@ -213,7 +277,7 @@
             const selectedTarget = document.getElementById('year-select').value;
             
             try {
-                const response = await fetch(`questions.json`); // GitHub Pages 연동용 패치 경로
+                const response = await fetch(`questions.json`);
                 const allData = await response.json();
                 
                 if (allData[airline] && allData[airline][selectedTarget]) {
