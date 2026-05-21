@@ -10,40 +10,71 @@ html<!DOCTYPE html>
 
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; box-sizing: border-box; }
 
-        /* 인트로 화면 - 비행기 사진 전체 배경 */
+        /* 인트로 화면 - 비행기 전체 배경 */
         #intro-screen {
-            position: fixed; top:0; left:0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             z-index: 200;
             background-image: url('KakaoTalk_20260522_044508697.jpg');
             background-size: cover;
-            background-position: center;
+            background-position: center 30%; /* 항공기가 로고 위로 보이도록 */
             background-repeat: no-repeat;
         }
 
-        /* 배경 어둡게 오버레이 (텍스트 가독성) */
+        /* 반투명 오버레이 */
         #intro-screen::before {
             content: '';
-            position: absolute; top:0; left:0;
+            position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.35);
         }
 
-        /* 오버레이 위에 콘텐츠 표시 */
+        /* 오버레이 위 콘텐츠 */
         #intro-screen > * { position: relative; z-index: 1; }
 
-        .intro-title { font-size: 2em; font-weight: bold; margin-bottom: 30px; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+        /* 가운데 콘텐츠 (제목 + 로고 + 텍스트) */
+        .intro-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1; /* 남은 공간 차지해서 정중앙 배치 */
+        }
 
-        #logo-btn { width: 400px; max-width: 90vw; cursor: pointer; transition: 0.3s; }
+        .intro-title {
+            font-size: 2em; font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+            margin-bottom: 24px;
+        }
+
+        #logo-btn {
+            width: 400px; max-width: 90vw;
+            cursor: pointer; transition: 0.3s;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+        }
         #logo-btn:hover { transform: scale(1.03); }
 
-        #intro-screen p { font-weight: bold; font-size: 1.2em; margin-top: 16px; color: #ffffff; text-shadow: 0 2px 6px rgba(0,0,0,0.8); }
+        .intro-hint {
+            font-weight: bold; font-size: 1.2em;
+            margin-top: 16px;
+            color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+        }
 
-        /* 항공사 로고 슬라이드 */
-        .marquee-container { width: 100%; overflow: hidden; position: absolute; bottom: 0; padding: 20px 0; background: rgba(0,0,0,0.35); white-space: nowrap; }
+        /* 항공사 로고 슬라이드 - 맨 하단 고정 */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            position: absolute;
+            bottom: 0;
+            padding: 14px 0;
+            background: rgba(0,0,0,0.45);
+            white-space: nowrap;
+        }
         .marquee-track { display: inline-block; animation: scroll 15s linear infinite; font-size: 0; }
-        .marquee-track img { height: 70px; object-fit: contain; margin: 0; padding: 0; vertical-align: middle; }
+        .marquee-track img { height: 60px; object-fit: contain; margin: 0 10px; vertical-align: middle; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* 메인 화면 */
@@ -64,10 +95,15 @@ html<!DOCTYPE html>
 
     <!-- 인트로 화면 -->
     <div id="intro-screen">
-        <div class="intro-title">CDU 학술부</div>
-        <img id="logo-btn" src="KakaoTalk_20260522_000027464.png" onclick="startApp()" alt="대학교 로고">
-        <p>로고를 클릭하여 시작하세요</p>
 
+        <!-- 가운데: 제목 + 로고 + 안내문구 -->
+        <div class="intro-center">
+            <div class="intro-title">CDU 학술부</div>
+            <img id="logo-btn" src="KakaoTalk_20260522_000027464.png" onclick="startApp()" alt="대학교 로고">
+            <p class="intro-hint">로고를 클릭하여 시작하세요</p>
+        </div>
+
+        <!-- 맨 하단: 항공사 로고 슬라이드 -->
         <div class="marquee-container">
             <div class="marquee-track">
                 <img src="JEJU AIR.png" alt="제주항공"><img src="EASTAR JET.png" alt="이스타항공"><img src="KOREAN AIR.png" alt="대한항공"><img src="T WAY.jpg" alt="티웨이항공"><img src="AIR INCHEON.jpg" alt="에어인천"><img src="JINAIR.png" alt="진에어"><img src="ASIANA AIRLINES.png" alt="아시아나항공"><img src="AIRSEOUL.jpg" alt="에어서울">
