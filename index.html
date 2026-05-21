@@ -10,7 +10,6 @@ html<!DOCTYPE html>
 
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; box-sizing: border-box; }
 
-        /* 인트로 화면 - 비행기 전체 배경 */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             display: flex; flex-direction: column;
@@ -18,11 +17,10 @@ html<!DOCTYPE html>
             z-index: 200;
             background-image: url('KakaoTalk_20260522_044508697.jpg');
             background-size: cover;
-            background-position: center 30%; /* 항공기가 로고 위로 보이도록 */
+            background-position: center 30%;
             background-repeat: no-repeat;
         }
 
-        /* 반투명 오버레이 */
         #intro-screen::before {
             content: '';
             position: absolute; top: 0; left: 0;
@@ -30,16 +28,14 @@ html<!DOCTYPE html>
             background: rgba(0, 0, 0, 0.35);
         }
 
-        /* 오버레이 위 콘텐츠 */
         #intro-screen > * { position: relative; z-index: 1; }
 
-        /* 가운데 콘텐츠 (제목 + 로고 + 텍스트) */
         .intro-center {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex: 1; /* 남은 공간 차지해서 정중앙 배치 */
+            flex: 1;
         }
 
         .intro-title {
@@ -63,7 +59,7 @@ html<!DOCTYPE html>
             text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
 
-        /* 항공사 로고 슬라이드 - 맨 하단 고정 */
+        /* 항공사 로고 슬라이드 - 끊김 없이 */
         .marquee-container {
             width: 100%;
             overflow: hidden;
@@ -72,10 +68,26 @@ html<!DOCTYPE html>
             padding: 14px 0;
             background: rgba(0,0,0,0.45);
             white-space: nowrap;
+            line-height: 0; /* 줄 간격 제거 */
         }
-        .marquee-track { display: inline-block; animation: scroll 15s linear infinite; font-size: 0; }
-        .marquee-track img { height: 60px; object-fit: contain; margin: 0 10px; vertical-align: middle; }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-track {
+            display: inline-flex; /* flex로 정확히 붙이기 */
+            align-items: center;
+            animation: scroll 18s linear infinite;
+            will-change: transform; /* 렌더링 최적화로 끊김 방지 */
+        }
+        .marquee-track img {
+            height: 60px;
+            object-fit: contain;
+            display: block; /* inline 여백 완전 제거 */
+            margin: 0;
+            padding: 0 12px; /* 좌우 패딩으로 간격 조절 (0이면 완전 밀착) */
+            flex-shrink: 0;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
 
         /* 메인 화면 */
         #main-content { display:none; width: 100%; max-width: 600px; flex-direction: column; align-items: center; margin-top: 50px; }
@@ -85,7 +97,6 @@ html<!DOCTYPE html>
         select { padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-color); }
         .btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
 
-        /* 모달 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; }
         .config-group { margin-bottom: 20px; }
@@ -93,32 +104,25 @@ html<!DOCTYPE html>
 </head>
 <body>
 
-    <!-- 인트로 화면 -->
     <div id="intro-screen">
-
-        <!-- 가운데: 제목 + 로고 + 안내문구 -->
         <div class="intro-center">
             <div class="intro-title">CDU 학술부</div>
             <img id="logo-btn" src="KakaoTalk_20260522_000027464.png" onclick="startApp()" alt="대학교 로고">
             <p class="intro-hint">로고를 클릭하여 시작하세요</p>
         </div>
 
-        <!-- 맨 하단: 항공사 로고 슬라이드 -->
         <div class="marquee-container">
-            <div class="marquee-track">
-                <img src="JEJU AIR.png" alt="제주항공"><img src="EASTAR JET.png" alt="이스타항공"><img src="KOREAN AIR.png" alt="대한항공"><img src="T WAY.jpg" alt="티웨이항공"><img src="AIR INCHEON.jpg" alt="에어인천"><img src="JINAIR.png" alt="진에어"><img src="ASIANA AIRLINES.png" alt="아시아나항공"><img src="AIRSEOUL.jpg" alt="에어서울">
-                <img src="JEJU AIR.png" alt="제주항공"><img src="EASTAR JET.png" alt="이스타항공"><img src="KOREAN AIR.png" alt="대한항공"><img src="T WAY.jpg" alt="티웨이항공"><img src="AIR INCHEON.jpg" alt="에어인천"><img src="JINAIR.png" alt="진에어"><img src="ASIANA AIRLINES.png" alt="아시아나항공"><img src="AIRSEOUL.jpg" alt="에어서울">
+            <div class="marquee-track" id="marquee-track">
+                <!-- JS로 자동 생성 (정확한 복사본 삽입) -->
             </div>
         </div>
     </div>
 
-    <!-- 메인 화면 -->
     <div id="main-content">
         <header>
             <div class="settings-icon" onclick="toggleModal()">⚙️</div>
             <h1>CDU 학술부</h1>
         </header>
-
         <div class="card">
             <label>항공사:</label>
             <select id="airline-select" onchange="updateYearOptions()"></select>
@@ -129,7 +133,6 @@ html<!DOCTYPE html>
         </div>
     </div>
 
-    <!-- 설정 모달 -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <h3>⚙️ 환경 설정</h3>
@@ -149,6 +152,27 @@ html<!DOCTYPE html>
     </div>
 
     <script>
+        // 마퀴 로고 JS로 생성 (원본 + 완전히 동일한 복사본 → 끊김 없는 루프)
+        const logos = [
+            { src: "JEJU AIR.png", alt: "제주항공" },
+            { src: "EASTAR JET.png", alt: "이스타항공" },
+            { src: "KOREAN AIR.png", alt: "대한항공" },
+            { src: "T WAY.jpg", alt: "티웨이항공" },
+            { src: "AIR INCHEON.jpg", alt: "에어인천" },
+            { src: "JINAIR.png", alt: "진에어" },
+            { src: "ASIANA AIRLINES.png", alt: "아시아나항공" },
+            { src: "AIRSEOUL.jpg", alt: "에어서울" }
+        ];
+
+        const track = document.getElementById('marquee-track');
+        // 원본 + 복사본 정확히 2세트 삽입
+        [...logos, ...logos].forEach(logo => {
+            const img = document.createElement('img');
+            img.src = logo.src;
+            img.alt = logo.alt;
+            track.appendChild(img);
+        });
+
         function startApp() { document.getElementById('intro-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'flex'; }
         function toggleModal() { const m = document.getElementById('settings-modal'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
         function toggleTheme() { document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
