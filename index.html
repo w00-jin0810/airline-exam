@@ -10,15 +10,15 @@
 
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; padding: 20px; box-sizing: border-box; }
 
-        /* 인트로 스타일 - 대학 로고 위치 유지 */
+        /* 인트로 스타일: 정중앙 정렬 */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; }
-        #logo-btn { width: 300px; cursor: pointer; transition: 0.3s; margin-bottom: 20px; } /* 대학 로고 원래 위치 */
-        #intro-screen p { margin-bottom: auto; font-weight: bold; } /* 안내 문구 위치 고정 */
+        #logo-btn { width: 300px; cursor: pointer; transition: 0.3s; margin-bottom: 20px; }
+        #intro-screen p { margin-bottom: 50px; font-weight: bold; font-size: 1.2em; }
         
-        /* 로고 슬라이드: 크기 유지 및 서로 딱 붙게 조정 */
-        .marquee-container { width: 100%; overflow: hidden; margin-top: auto; padding: 20px 0; background: rgba(255, 255, 255, 0.5); }
-        .marquee-track { display: flex; gap: 0; animation: scroll 25s linear infinite; align-items: center; white-space: nowrap; } /* gap 0으로 딱 붙임 */
-        .marquee-track img { height: 70px; object-fit: contain; margin: 0 10px; } /* 크기 유지 및 최소 여백 */
+        /* 로고 슬라이드: 속도 빠르게, 간격 0으로 딱 붙임 */
+        .marquee-container { width: 100%; overflow: hidden; margin-top: auto; padding: 20px 0; background: rgba(0,0,0,0.05); }
+        .marquee-track { display: flex; gap: 0; animation: scroll 12s linear infinite; align-items: center; white-space: nowrap; } /* 25s에서 12s로 속도 UP */
+        .marquee-track img { height: 70px; object-fit: contain; margin: 0; } /* margin 0으로 설정 */
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* 메인 화면 스타일 */
@@ -39,6 +39,7 @@
     <div id="intro-screen">
         <img id="logo-btn" src="KakaoTalk_20260522_000027464.png" onclick="startApp()" alt="대학교 로고">
         <p>로고를 클릭하여 시작하세요</p>
+        
         <div class="marquee-container">
             <div class="marquee-track">
                 <img src="JEJU AIR.png" alt="제주항공"><img src="EASTAR JET.png" alt="이스타항공"><img src="KOREAN AIR.png" alt="대한항공"><img src="T WAY.jpg" alt="티웨이항공"><img src="AIR INCHEON.jpg" alt="에어인천"><img src="JINAIR.png" alt="진에어"><img src="ASIANA AIRLINES.png" alt="아시아나항공"><img src="AIRSEOUL.jpg" alt="에어서울">
