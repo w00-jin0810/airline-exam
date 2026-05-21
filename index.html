@@ -59,7 +59,6 @@ html<!DOCTYPE html>
             text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
 
-        /* 항공사 로고 슬라이드 - 끊김 없이 */
         .marquee-container {
             width: 100%;
             overflow: hidden;
@@ -67,29 +66,31 @@ html<!DOCTYPE html>
             bottom: 0;
             padding: 14px 0;
             background: rgba(0,0,0,0.45);
-            white-space: nowrap;
-            line-height: 0; /* 줄 간격 제거 */
+            line-height: 0;
         }
+
         .marquee-track {
-            display: inline-flex; /* flex로 정확히 붙이기 */
+            display: inline-flex;
             align-items: center;
+            gap: 0;
             animation: scroll 18s linear infinite;
-            will-change: transform; /* 렌더링 최적화로 끊김 방지 */
+            will-change: transform;
         }
+
         .marquee-track img {
             height: 60px;
             object-fit: contain;
-            display: block; /* inline 여백 완전 제거 */
+            display: block;
             margin: 0;
-            padding: 0 12px; /* 좌우 패딩으로 간격 조절 (0이면 완전 밀착) */
+            padding: 0;
             flex-shrink: 0;
         }
+
         @keyframes scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            100% { transform: translateX(-33.333%); }
         }
 
-        /* 메인 화면 */
         #main-content { display:none; width: 100%; max-width: 600px; flex-direction: column; align-items: center; margin-top: 50px; }
         header { text-align: center; margin-bottom: 40px; position: relative; width: 100%; }
         .settings-icon { position: absolute; top: 0; right: 0; cursor: pointer; font-size: 30px; }
@@ -112,9 +113,7 @@ html<!DOCTYPE html>
         </div>
 
         <div class="marquee-container">
-            <div class="marquee-track" id="marquee-track">
-                <!-- JS로 자동 생성 (정확한 복사본 삽입) -->
-            </div>
+            <div class="marquee-track" id="marquee-track"></div>
         </div>
     </div>
 
@@ -152,7 +151,6 @@ html<!DOCTYPE html>
     </div>
 
     <script>
-        // 마퀴 로고 JS로 생성 (원본 + 완전히 동일한 복사본 → 끊김 없는 루프)
         const logos = [
             { src: "JEJU AIR.png", alt: "제주항공" },
             { src: "EASTAR JET.png", alt: "이스타항공" },
@@ -165,8 +163,9 @@ html<!DOCTYPE html>
         ];
 
         const track = document.getElementById('marquee-track');
-        // 원본 + 복사본 정확히 2세트 삽입
-        [...logos, ...logos].forEach(logo => {
+
+        // 3세트 삽입 → -33.333% 이동 후 완벽하게 루프
+        [...logos, ...logos, ...logos].forEach(logo => {
             const img = document.createElement('img');
             img.src = logo.src;
             img.alt = logo.alt;
