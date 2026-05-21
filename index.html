@@ -11,15 +11,54 @@
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; box-sizing: border-box; }
 
         /* 인트로 화면 */
-        #intro-screen { position: fixed; top:0; left:0; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; background: var(--bg-color); }
+        #intro-screen { 
+            position: fixed; 
+            top:0; 
+            left:0; 
+            width: 100vw; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 200; 
+            
+            /* 배경 이미지 설정 */
+            background-image: url('background.jpg'); /* 여기에 사진 파일명을 넣으세요 */
+            background-size: cover;
+            background-position: center 30%; /* 항공기가 로고 위쪽에 보이도록 위치 조정 */
+            background-repeat: no-repeat;
+        }
+
+        /* 사진 위에서 글자가 잘 보이도록 그림자 효과 추가 */
+        .intro-title { 
+            font-size: 2.5em; 
+            font-weight: bold; 
+            margin-bottom: 50px; 
+            color: white; 
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7); 
+            z-index: 210;
+        } 
         
-        /* 텍스트 및 로고 배치 */
-        .intro-title { font-size: 2em; font-weight: bold; margin-bottom: 30px; } 
-        #logo-btn { width: 400px; cursor: pointer; transition: 0.3s; } /* 400px로 조절 */
-        #intro-screen p { font-weight: bold; font-size: 1.2em; margin-top: 30px; }
+        #logo-btn { 
+            width: 400px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            z-index: 210;
+            filter: drop-shadow(0px 0px 10px rgba(255,255,255,0.5)); /* 로고 강조 */
+        }
         
-        /* 끊김 없는 슬라이드: 로고 간격 0으로 강제 */
-        .marquee-container { width: 100%; overflow: hidden; position: absolute; bottom: 0; padding: 20px 0; background: rgba(0,0,0,0.05); white-space: nowrap; }
+        #intro-screen p { 
+            font-weight: bold; 
+            font-size: 1.2em; 
+            margin-top: 30px; 
+            color: white; 
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+            z-index: 210;
+        }
+        
+        /* 끊김 없는 슬라이드 */
+        .marquee-container { width: 100%; overflow: hidden; position: absolute; bottom: 0; padding: 20px 0; background: rgba(255,255,255,0.8); white-space: nowrap; z-index: 220; }
         .marquee-track { display: inline-block; animation: scroll 15s linear infinite; font-size: 0; }
         .marquee-track img { height: 70px; object-fit: contain; margin: 0; padding: 0; vertical-align: middle; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
