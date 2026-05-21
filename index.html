@@ -5,27 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CDU 학술부 - 항공사 기출문제</title>
     <style>
-        :root[data-theme="light"] { --bg-color: #f4f6f9; --card-bg: #ffffff; --text-color: #333; --panel-bg: #fff; --border: #ddd; }
-        :root[data-theme="dark"] { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #eee; --panel-bg: #2d2d2d; --border: #444; }
+        :root[data-theme="light"] { --bg-color: #f4f6f9; --card-bg: #ffffff; --text-color: #333; --border: #ddd; }
+        :root[data-theme="dark"] { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #eee; --border: #444; }
 
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
         
-        /* 헤더 영역 */
-        header { text-align: center; margin: 40px 0; width: 100%; position: relative; }
+        header { text-align: center; margin: 40px 0; width: 100%; position: relative; max-width: 600px; }
         h1 { margin: 0; font-size: 2em; }
         .sub-title { font-size: 1.1em; color: #888; margin-top: 5px; }
-        .settings-icon { position: absolute; top: 0; right: 20px; cursor: pointer; font-size: 24px; }
+        .settings-icon { position: absolute; top: 10px; right: 0; cursor: pointer; font-size: 24px; }
 
-        .card { background: var(--card-bg); padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
-
-        /* 설정 모달 스타일 */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; }
-
+        .card { background: var(--card-bg); padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; margin-bottom: 20px; }
+        
         select { padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-color); }
         .btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; }
         
-        .config-group { margin-bottom: 20px; }
+        /* 모달 스타일 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 450px; }
+        .config-group { margin-bottom: 25px; }
     </style>
 </head>
 <body>
@@ -41,14 +39,20 @@
         <label>항공사:</label>
         <select id="airline-select" onchange="updateYearOptions()">
             <option value="JejuAir">제주항공</option>
+            <option value="EastarJet">이스타항공</option>
             <option value="KoreanAir">대한항공</option>
-            </select>
+            <option value="TwayAir">티웨이항공</option>
+            <option value="AirIncheon">에어인천</option>
+            <option value="JinAir">진에어</option>
+            <option value="Asiana">아시아나항공</option>
+            <option value="AirSeoul">에어서울</option>
+        </select>
         
         <label>연도 및 차수:</label>
         <select id="year-select"></select>
         
-        <button class="btn" style="background:#007bff;" onclick="startQuiz('practice')">✏️ 한 문제씩 학습 모드</button>
-        <button class="btn" style="background:#28a745;" onclick="startQuiz('exam')">⏱️ 실전 모의고사 모드</button>
+        <button class="btn" style="background:#007bff;" onclick="alert('문제 모드 시작')">✏️ 한 문제씩 학습 모드</button>
+        <button class="btn" style="background:#28a745;" onclick="alert('모의고사 모드 시작')">⏱️ 실전 모의고사 모드</button>
     </div>
 
     <div id="settings-modal" class="modal">
@@ -58,14 +62,35 @@
                 <button class="btn" style="background:#6c757d;" onclick="toggleTheme()">☀️/🌙 테마 변경</button>
             </div>
             <div class="config-group">
-                <label>글자 크기:</label>
-                <input type="range" min="14" max="28" value="18" oninput="adjustFont(this.value)">
+                <label>화면 너비 조절 (<span id="width-val">1000</span>px):</label>
+                <input type="range" style="width:100%" min="600" max="1600" value="1000" oninput="adjustWidth(this.value)">
             </div>
-            <button class="btn" onclick="toggleModal()">닫기</button>
+            <div class="config-group">
+                <label>글자 크기 조절 (<span id="font-val">18</span>px):</label>
+                <input type="range" style="width:100%" min="14" max="28" value="18" oninput="adjustFont(this.value)">
+            </div>
+            <button class="btn" style="background:#333;" onclick="toggleModal()">설정 완료 및 닫기</button>
         </div>
     </div>
 
     <script>
+        const airlineData = {
+            JejuAir: ["2016년 1차", "2017년 1차", "2017년 2차", "2017년 3차", "2018년 1차", "2018년 2차", "2025년 1차"],
+            EastarJet: ["2016년 1차"],
+            KoreanAir: ["연도 불명 1차", "연도 불명 2차", "연도 불명 3차", "연도 불명 4차", "연도 불명 5차", "연도 불명 6차", "연도 불명 7차", "연도 불명 8차", "연도 불명 9차", "연도 불명 10차", "2025년 1차", "2025년 2차"],
+            TwayAir: ["2015년 1차", "2015년 2차", "2017년 1차", "2017년 2차", "2018년 1차", "2018년 2차", "2024년 1차", "연도 불명 1차", "연도 불명 2차", "연도 불명 3차"],
+            AirIncheon: ["2024년 2차", "연도 불명 1차"],
+            JinAir: ["2025년 1차"],
+            Asiana: ["2018년 1차"],
+            AirSeoul: ["연도 불명 1차"]
+        };
+
+        function updateYearOptions() {
+            const airline = document.getElementById('airline-select').value;
+            const select = document.getElementById('year-select');
+            select.innerHTML = airlineData[airline].map(y => `<option value="${y}">${y}</option>`).join('');
+        }
+
         function toggleModal() {
             const modal = document.getElementById('settings-modal');
             modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
@@ -77,18 +102,16 @@
             document.documentElement.setAttribute('data-theme', next);
         }
 
-        function adjustFont(size) {
-            document.body.style.fontSize = size + 'px';
+        function adjustWidth(val) {
+            document.body.style.maxWidth = val + 'px';
+            document.getElementById('width-val').innerText = val;
         }
 
-        // 항공사 연도 데이터 연동 예시
-        const airlineData = { "JejuAir": ["2016년 1차", "2025년 1차"], "KoreanAir": ["2025년 1차"] };
-        function updateYearOptions() {
-            const airline = document.getElementById('airline-select').value;
-            const select = document.getElementById('year-select');
-            select.innerHTML = airlineData[airline].map(y => `<option>${y}</option>`).join('');
+        function adjustFont(val) {
+            document.body.style.fontSize = val + 'px';
+            document.getElementById('font-val').innerText = val;
         }
-        
+
         updateYearOptions(); // 초기 실행
     </script>
 </body>
