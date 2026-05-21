@@ -10,30 +10,25 @@
 
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; box-sizing: border-box; }
 
-        /* 인트로 화면 */
         #intro-screen { 
             position: fixed; top:0; left:0; width: 100vw; height: 100vh; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             z-index: 200; 
-            /* 비행기 사진을 배경으로 설정 */
             background-image: url('KakaoTalk_20260522_044508697.jpg'); 
             background-size: cover;
-            background-position: center 20%; /* 비행기가 로고 위로 보이도록 조정 */
+            background-position: center 20%; 
             background-repeat: no-repeat;
         }
 
-        /* 텍스트 및 로고 배치 */
         .intro-title { font-size: 2em; font-weight: bold; margin-bottom: 20px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); z-index: 210; } 
         #logo-btn { width: 350px; cursor: pointer; transition: 0.3s; z-index: 210; } 
         #intro-screen p { font-weight: bold; font-size: 1.2em; margin-top: 20px; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); z-index: 210; }
         
-        /* 끊김 없는 슬라이드 */
         .marquee-container { width: 100%; overflow: hidden; position: absolute; bottom: 0; padding: 15px 0; background: rgba(255,255,255,0.9); white-space: nowrap; z-index: 220; }
         .marquee-track { display: inline-block; animation: scroll 15s linear infinite; font-size: 0; }
         .marquee-track img { height: 60px; object-fit: contain; margin: 0; padding: 0; vertical-align: middle; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* 메인 화면 */
         #main-content { display:none; width: 100%; max-width: 600px; flex-direction: column; align-items: center; margin-top: 50px; }
         header { text-align: center; margin-bottom: 40px; position: relative; width: 100%; }
         .settings-icon { position: absolute; top: 0; right: 0; cursor: pointer; font-size: 30px; }
@@ -41,7 +36,6 @@
         select { padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-color); }
         .btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
         
-        /* 모달 스타일 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; }
         .config-group { margin-bottom: 20px; }
