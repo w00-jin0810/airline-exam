@@ -8,25 +8,25 @@
         :root[data-theme="light"] { --bg-color: #f4f6f9; --card-bg: #ffffff; --text-color: #333; --border: #ddd; }
         :root[data-theme="dark"] { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #eee; --border: #444; }
 
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; padding: 20px; box-sizing: border-box; }
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: 0.3s; box-sizing: border-box; overflow: hidden; }
 
-        /* 인트로 스타일: 정중앙 정렬 */
-        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; }
+        /* 인트로 화면 */
+        #intro-screen { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; z-index: 200; background: var(--bg-color); }
         #logo-btn { width: 300px; cursor: pointer; transition: 0.3s; margin-bottom: 20px; }
-        #intro-screen p { margin-bottom: 50px; font-weight: bold; font-size: 1.2em; }
+        #intro-screen p { font-weight: bold; font-size: 1.2em; margin-bottom: 50px; }
         
-        /* 로고 슬라이드: 하단 고정 */
-        .marquee-container { width: 100%; overflow: hidden; margin-top: auto; padding: 20px 0; background: rgba(0,0,0,0.05); }
-        .marquee-track { display: flex; gap: 0; animation: scroll 25s linear infinite; align-items: center; white-space: nowrap; }
-        .marquee-track img { height: 70px; object-fit: contain; margin: 0 10px; }
+        /* 항공사 로고 슬라이드: 하단 고정, 간격 0, 속도 개선 */
+        .marquee-container { width: 100%; overflow: hidden; position: absolute; bottom: 0; padding: 20px 0; background: rgba(0,0,0,0.05); }
+        .marquee-track { display: flex; gap: 0; animation: scroll 12s linear infinite; white-space: nowrap; align-items: center; }
+        .marquee-track img { height: 70px; object-fit: contain; margin: 0; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* 메인 화면 스타일 */
-        #main-content { display:none; width: 100%; flex-direction: column; align-items: center; }
-        header { text-align: center; margin: 40px 0; position: relative; max-width: 600px; width: 100%; }
+        /* 메인 화면 */
+        #main-content { display:none; width: 100%; height: 100vh; flex-direction: column; align-items: center; justify-content: center; }
+        header { text-align: center; margin-bottom: 40px; position: relative; max-width: 600px; width: 100%; }
         h1 { margin: 0; font-size: 2.5em; }
         .settings-icon { position: absolute; top: 10px; right: 0; cursor: pointer; font-size: 24px; }
-        .card { background: var(--card-bg); padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
+        .card { background: var(--card-bg); padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
         select { padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-color); }
         .btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
         
