@@ -15,7 +15,7 @@ html<!DOCTYPE html>
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             z-index: 200;
-            background-image: url('KakaoTalk_20260522_044508697.jpg');
+            background-image: url('초당대_학술부_배경.jpg');
             background-size: cover;
             background-position: center 30%;
             background-repeat: no-repeat;
@@ -163,8 +163,6 @@ html<!DOCTYPE html>
         ];
 
         const track = document.getElementById('marquee-track');
-
-        // 3세트 삽입 → -33.333% 이동 후 완벽하게 루프
         [...logos, ...logos, ...logos].forEach(logo => {
             const img = document.createElement('img');
             img.src = logo.src;
