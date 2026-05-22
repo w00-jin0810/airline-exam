@@ -58,8 +58,14 @@
         
         .auth-nav-btn { color: #28a745; border: 2px solid #28a745; border-radius: 20px; padding: 6px 14px; margin-left: 10px; border-bottom: 2px solid #28a745 !important;}
         .auth-nav-btn:hover { background: #28a745; color: white; }
-        .profile-nav-btn { color: #007bff; border: 2px solid #007bff; border-radius: 20px; padding: 6px 14px; margin-left: 10px; border-bottom: 2px solid #007bff !important;}
+        .profile-nav-btn { color: #007bff; border: 2px solid #007bff; border-radius: 20px; padding: 6px 14px; margin-left: 5px; border-bottom: 2px solid #007bff !important;}
         .profile-nav-btn:hover { background: #007bff; color: white; }
+        
+        /* 알림 종모양 버튼 변경 */
+        .noti-nav-btn { position: relative; background: none; border: none; cursor: pointer; margin-left: 10px; padding: 6px; border-bottom:none !important; display: flex; align-items: center; justify-content: center; }
+        .noti-nav-btn svg { width: 22px; height: 22px; stroke: var(--text-color); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: 0.2s; }
+        .noti-nav-btn:hover svg { transform: scale(1.1); stroke: #007bff; }
+        .noti-badge { position: absolute; top: 0px; right: -2px; background: #e74c3c; color: white; font-size: 0.65em; font-weight: bold; padding: 2px 6px; border-radius: 12px; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transform: translate(20%, -10%); }
 
         /* 버튼류 */
         .primary-btn { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: bold; transition: 0.2s; }
@@ -122,7 +128,7 @@
 
         /* 글쓰기 폼 */
         .write-form { display: none; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-        .write-form input, .write-form textarea {
+        .write-form input[type=text], .write-form textarea {
             padding: 12px; border: 1px solid var(--border); border-radius: 8px;
             background: var(--bg-color); color: var(--text-color);
             font-family: 'Malgun Gothic', sans-serif; font-size: 0.95em; width: 100%;
@@ -136,7 +142,7 @@
         .post-list { display: flex; flex-direction: column; gap: 12px; }
         .post-item { background: var(--bg-color); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
         .post-item .post-header-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-        .post-item .post-title { font-weight: bold; font-size: 1.05em; color: var(--text-color); }
+        .post-item .post-title { font-weight: bold; font-size: 1.05em; color: var(--text-color); display: flex; align-items: center; gap: 8px; }
         .post-item .post-content { font-size: 0.9em; color: #666; line-height: 1.6; white-space: pre-wrap; margin-bottom: 10px;}
         :root[data-theme="dark"] .post-item .post-content { color: #aaa; }
         .post-item .post-meta { font-size: 0.78em; color: #aaa; border-top: 1px solid var(--border); padding-top: 8px; display: flex; justify-content: space-between;}
@@ -145,9 +151,16 @@
         /* 공통 모달 스타일 & 인증 모달 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 400; justify-content: center; align-items: center; }
         .modal-overlay.open { display: flex; }
-        .modal-box { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 16px; position: relative; }
+        .modal-box { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 16px; position: relative; max-height: 90vh; overflow-y: auto;}
         .modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5em; cursor: pointer; color: var(--text-color); background: none; border: none; }
-        .modal-box input, .modal-box textarea, .modal-box select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: 'Malgun Gothic', sans-serif; width: 100%; }
+        .modal-box input:not([type="checkbox"]), .modal-box textarea, .modal-box select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: 'Malgun Gothic', sans-serif; width: 100%; }
+        
+        /* 비밀번호 👁️ 토글 컨테이너 (정확한 이미지 구현) */
+        .pw-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        .pw-wrapper input { width: 100%; padding-right: 40px !important; }
+        .pw-toggle { position: absolute; right: 10px; background: none; border: none; cursor: pointer; user-select: none; color: #666; display: flex; align-items: center; justify-content: center;}
+        .pw-toggle svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
         .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
         .modal-btns button { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .modal-btns .confirm-btn { background: #007bff; color: white; width: 100%; }
@@ -167,11 +180,21 @@
 
         /* 회원 관리 테이블 */
         .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
-        .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
+        .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: center; vertical-align: middle;}
+        .admin-table th:first-child, .admin-table td:first-child { text-align: left; }
         .admin-table th { background: var(--bg-color); font-weight: bold; }
-        .admin-table select { padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-color); }
+        .admin-table select { padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-color); width: 100%; }
 
-        @media (max-width: 600px) {
+        /* 알림 모달 리스트 */
+        .noti-list-box { display: flex; flex-direction: column; gap: 10px; }
+        .noti-item { padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); text-align: left; transition: 0.2s;}
+        .noti-item.unread { border-left: 4px solid #dc3545; background: #fff5f5; cursor: pointer; }
+        .noti-item.unread:hover { opacity: 0.9; }
+        :root[data-theme="dark"] .noti-item.unread { background: #2c1a1a; }
+        .noti-item h4 { margin: 0 0 6px 0; font-size: 1em; color: var(--text-color); }
+        .noti-item p { margin: 0; font-size: 0.85em; color: #666; }
+
+        @media (max-width: 700px) {
             .header-title-text .univ-name { display: none; }
             .nav-tab { padding: 8px 8px; font-size: 0.72em; }
             .session-header { flex-direction: column; }
@@ -217,6 +240,12 @@
                     <button class="nav-tab" onclick="showTab('community', this)">COMMUNITY</button>
                     
                     <button id="nav-auth-btn" class="nav-tab auth-nav-btn" onclick="openAuthModal()">로그인 / 가입</button>
+                    
+                    <button id="nav-noti-btn" class="noti-nav-btn" style="display:none;" onclick="openNotiModal()" title="알림 확인">
+                        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span class="noti-badge" id="noti-badge-count">0</span>
+                    </button>
+                    
                     <button id="nav-profile-btn" class="nav-tab profile-nav-btn" style="display:none;" onclick="openProfileModal()">내 프로필</button>
 
                     <button id="nav-admin" class="nav-tab" style="display:none; color: #dc3545;" onclick="showTab('admin', this)">⚙️ 권한 관리</button>
@@ -307,7 +336,14 @@
                         <div class="write-form" id="write-form-qna">
                             <input type="text" id="qna-title" placeholder="제목을 입력하세요">
                             <textarea id="qna-content" placeholder="내용을 입력하세요"></textarea>
-                            <button class="submit-btn" onclick="submitPost('qna')">등록하기</button>
+                            
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <input type="checkbox" id="qna-is-secret" style="width:18px; height:18px;">
+                                    <label for="qna-is-secret" style="font-size:0.95em; font-weight:bold; color:#d9534f; cursor:pointer;">🔒 비밀글로 작성 (열람시 비밀번호 필요)</label>
+                                </div>
+                                <button class="submit-btn" onclick="submitPost('qna')">등록하기</button>
+                            </div>
                         </div>
                         <div class="post-list" id="qna-list">
                             <div class="post-empty" id="qna-empty">아직 등록된 Q&A가 없습니다.</div>
@@ -321,7 +357,14 @@
                         <div class="write-form" id="write-form-suggest">
                             <input type="text" id="suggest-title" placeholder="제목을 입력하세요">
                             <textarea id="suggest-content" placeholder="내용을 입력하세요"></textarea>
-                            <button class="submit-btn" onclick="submitPost('suggest')">등록하기</button>
+                            
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <input type="checkbox" id="suggest-is-secret" style="width:18px; height:18px;">
+                                    <label for="suggest-is-secret" style="font-size:0.95em; font-weight:bold; color:#d9534f; cursor:pointer;">🔒 비밀글로 작성 (열람시 비밀번호 필요)</label>
+                                </div>
+                                <button class="submit-btn" onclick="submitPost('suggest')">등록하기</button>
+                            </div>
                         </div>
                         <div class="post-list" id="suggest-list">
                             <div class="post-empty" id="suggest-empty">아직 등록된 건의사항이 없습니다.</div>
@@ -350,27 +393,49 @@
                     </div>
                 </div>
 
+                <div class="card" id="admin-notification-card">
+                    <div class="section-title">🔔 부원 알림 발송</div>
+                    <p style="font-size:0.85em; color:#666; margin-bottom:16px;">공지사항이나 기출문제가 업로드되었을 때, 전체 부원 또는 선택한 부원에게 알림을 보낼 수 있습니다.</p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <input type="text" id="noti-send-title" placeholder="알림 제목 (예: 새로운 대한항공 기출 업로드!)" style="padding:10px; border:1px solid var(--border); border-radius:8px;">
+                        <textarea id="noti-send-msg" placeholder="알림 상세 내용" style="padding:10px; border:1px solid var(--border); border-radius:8px; height:60px; resize:vertical;"></textarea>
+                        
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <label style="font-weight:bold; font-size:0.9em;">발송 대상:</label>
+                            <select id="noti-send-target" style="padding:8px; border-radius:6px; border:1px solid var(--border);">
+                                <option value="all">전체 회원</option>
+                                </select>
+                            <button class="primary-btn" style="background:#28a745; margin-left:auto;" onclick="sendNotification()">알림 전송하기</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="section-title">🔒 등급별 기능 권한 설정</div>
-                    <p style="font-size:0.85em; color:#666; margin-bottom:16px;">각 등급이 수행 가능한 액션을 동적으로 직접 통제할 수 있습니다.</p>
+                    <p style="font-size:0.85em; color:#666; margin-bottom:16px;">각 등급이 수행 가능한 액션을 동적으로 제어합니다. <span style="color:#dc3545; font-weight:bold;">체크박스 변경 후 반드시 하단의 '저장하기'를 눌러야 반영됩니다.</span></p>
                     <div style="overflow-x: auto;">
                         <table class="admin-table" style="text-align: center;">
                             <thead>
                                 <tr>
                                     <th style="text-align:left;">등급구분</th>
                                     <th>공지사항 작성</th>
-                                    <th>일반 게시글 작성 (Q&A/건의)</th>
+                                    <th>일반 게시글 작성</th>
+                                    <th>비밀글 강제 열람 허용</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-permission-settings">
                                 </tbody>
                         </table>
                     </div>
+                    <div style="text-align: right; margin-top: 15px;">
+                        <button class="primary-btn" onclick="savePermissions()">저장하기</button>
+                    </div>
                 </div>
 
                 <div class="card">
-                    <div class="section-title">👑 기존 회원 관리 및 권한 위임</div>
-                    <p style="font-size:0.85em; color:#666; margin-bottom:16px;">승인 완료된 유저들의 등급을 변경하거나 권한을 위임할 수 있습니다.</p>
+                    <div class="section-title">👑 회원 등급 관리 및 강제 탈퇴</div>
+                    <p style="font-size:0.85em; color:#666; margin-bottom:16px;">유저들의 등급을 위임 변경합니다. <span style="color:#dc3545; font-weight:bold;">드롭다운 변경 후 하단의 '저장하기'를 눌러야 권한이 최종 변경됩니다.</span> (강제 탈퇴는 즉시 적용)</p>
                     <div style="overflow-x: auto;">
                         <table class="admin-table">
                             <thead>
@@ -378,13 +443,16 @@
                                     <th>학번 (ID)</th>
                                     <th>이름</th>
                                     <th>닉네임</th>
-                                    <th>현재 등급</th>
-                                    <th>등급 변경 (위임)</th>
+                                    <th style="min-width: 130px;">등급 변경 (위임)</th>
+                                    <th>강제 탈퇴</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-user-list">
                                 </tbody>
                         </table>
+                    </div>
+                    <div style="text-align: right; margin-top: 15px;">
+                        <button class="primary-btn" onclick="saveUserRoles()">저장하기</button>
                     </div>
                 </div>
             </div>
@@ -402,14 +470,29 @@
             
             <div class="auth-panel active" id="panel-login">
                 <input type="text" id="login-id" placeholder="학번 (ID)">
-                <input type="password" id="login-pw" placeholder="비밀번호">
+                <div class="pw-wrapper">
+                    <input type="password" id="login-pw" placeholder="비밀번호">
+                    <span class="pw-toggle" onclick="togglePw(this)">
+                        <svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </span>
+                </div>
                 <button class="primary-btn" style="width:100%; padding:12px; margin-top:5px;" onclick="doLogin()">로그인</button>
             </div>
 
             <div class="auth-panel" id="panel-signup">
                 <input type="text" id="signup-id" placeholder="학번 (ID)">
-                <input type="password" id="signup-pw" placeholder="비밀번호 설정">
-                <input type="password" id="signup-pw-confirm" placeholder="비밀번호 확인">
+                <div class="pw-wrapper">
+                    <input type="password" id="signup-pw" placeholder="비밀번호 설정">
+                    <span class="pw-toggle" onclick="togglePw(this)">
+                        <svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </span>
+                </div>
+                <div class="pw-wrapper">
+                    <input type="password" id="signup-pw-confirm" placeholder="비밀번호 확인">
+                    <span class="pw-toggle" onclick="togglePw(this)">
+                        <svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </span>
+                </div>
                 <input type="text" id="signup-name" placeholder="이름 (실명)">
                 <input type="text" id="signup-nick" placeholder="닉네임 설정">
                 <button class="primary-btn" style="width:100%; padding:12px; margin-top:5px; background:#28a745;" onclick="doSignup()">가입 신청</button>
@@ -429,7 +512,21 @@
                 </h2>
                 <p style="font-size:0.9em; color:#777;"><span id="profile-user-name">이름</span> (<span id="profile-user-id">학번</span>)</p>
             </div>
-            <button class="primary-btn" style="background:#dc3545; width:100%; padding:12px; margin-top:15px;" onclick="doLogout()">로그아웃</button>
+            
+            <hr style="border:none; border-top:1px solid var(--border); margin:10px 0;">
+            
+            <button class="primary-btn" style="background:#dc3545; width:100%; padding:12px; margin-top:5px;" onclick="doLogout()">로그아웃</button>
+            <button class="delete-btn" style="width:100%; padding:12px; margin-top:5px; margin-left:0; background:transparent; color:#dc3545; border:1px solid #dc3545;" onclick="withdrawSelf()">회원 탈퇴</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="noti-modal">
+        <div class="modal-box">
+            <button class="modal-close-btn" onclick="closeNotiModal()">×</button>
+            <h3 style="margin-bottom: 10px;">🔔 내 알림</h3>
+            <div class="noti-list-box" id="my-noti-list">
+                </div>
+            <button class="primary-btn" style="width:100%; margin-top:10px; background:#6c757d;" onclick="clearNotis()">전체 삭제</button>
         </div>
     </div>
 
@@ -446,33 +543,89 @@
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQiE3QCEAo7p-wXQkatXQKMhaiXHcMEmI",
+            authDomain: "cdu-haksul.firebaseapp.com",
+            projectId: "cdu-haksul",
+            storageBucket: "cdu-haksul.firebasestorage.app",
+            messagingSenderId: "894874216806",
+            appId: "1:894874216806:web:cfce96a7c201d81ddd80a7",
+            measurementId: "G-RHPLGTDLDX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseApp = app;
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+    </script>
+
     <script>
         // ==========================================
-        // 1. 글로벌 설정 데이터 정의 및 초기화
+        // 0. UI 보조 함수 (비밀번호 눈 모양 토글)
+        // ==========================================
+        function togglePw(btn) {
+            const input = btn.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                // 뜬 눈 아이콘
+                btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            } else {
+                input.type = 'password';
+                // 사선 그어진 눈 아이콘
+                btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+            }
+        }
+
+        // ==========================================
+        // 1. 글로벌 데이터 초기화 (유저, 권한, 게시글, 알림)
         // ==========================================
         const AVAILABLE_ROLES = ['학생', '학술부 조장', '학술부 차장', '학술부장', '교수'];
         
         let rolePerms = JSON.parse(localStorage.getItem('rolePermissions'));
         if(!rolePerms) {
+            // 기본값 셋팅
             rolePerms = {
-                '학생': { notice: false, board: true },
-                '학술부 조장': { notice: false, board: true },
-                '학술부 차장': { notice: true, board: true },
-                '학술부장': { notice: true, board: true },
-                '교수': { notice: true, board: true }
+                '학생': { notice: false, board: true, secretRead: false },
+                '학술부 조장': { notice: false, board: true, secretRead: false },
+                '학술부 차장': { notice: true, board: true, secretRead: true },
+                '학술부장': { notice: true, board: true, secretRead: true },
+                '교수': { notice: true, board: true, secretRead: false } 
             };
             localStorage.setItem('rolePermissions', JSON.stringify(rolePerms));
+        } else {
+            let updated = false;
+            Object.keys(rolePerms).forEach(role => {
+                if (rolePerms[role].secretRead === undefined) {
+                    rolePerms[role].secretRead = (role === '학술부장' || role === '학술부 차장' || role === '교수');
+                    updated = true;
+                }
+            });
+            if(updated) localStorage.setItem('rolePermissions', JSON.stringify(rolePerms));
         }
+
+        // 임시 저장용 객체들
+        let tempRolePerms = JSON.parse(JSON.stringify(rolePerms));
+        let tempUserRoles = {}; 
 
         let usersDB = JSON.parse(localStorage.getItem('usersDB'));
         if (!usersDB) {
-            // 관리자 계정은 기본적으로 승인(approved) 상태로 생성
             usersDB = [
                 { id: '21181016', password: 'woojin0710!', name: '신우진', nickname: '최고관리자', role: '학술부장', status: 'approved' }
             ];
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
         }
 
+        let notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
         let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
 
         let posts = { 
@@ -481,29 +634,30 @@
         };
 
         // ==========================================
-        // 2. 인증 및 UI 상태 제어
+        // 2. 인증, 알림, UI 상태 제어
         // ==========================================
         function updateAuthUI() {
             const navAuthBtn = document.getElementById('nav-auth-btn');
             const navProfileBtn = document.getElementById('nav-profile-btn');
             const navAdmin = document.getElementById('nav-admin');
+            const navNotiBtn = document.getElementById('nav-noti-btn');
             const noticeBtn = document.getElementById('btn-create-notice');
             
             const writeFormQna = document.getElementById('write-form-qna');
             const writeFormSuggest = document.getElementById('write-form-suggest');
+            const adminNotiCard = document.getElementById('admin-notification-card');
 
             if (currentUser) {
-                // 상단 네비게이션 버튼 교체
                 navAuthBtn.style.display = 'none';
                 navProfileBtn.style.display = 'inline-block';
+                navNotiBtn.style.display = 'inline-block'; 
                 
-                // 프로필 정보 맵핑
                 document.getElementById('profile-user-role').innerText = currentUser.role;
                 document.getElementById('profile-user-nick').innerText = currentUser.nickname;
                 document.getElementById('profile-user-name').innerText = currentUser.name;
                 document.getElementById('profile-user-id').innerText = currentUser.id;
 
-                const myPerm = rolePerms[currentUser.role] || { notice: false, board: false };
+                const myPerm = rolePerms[currentUser.role] || { notice: false, board: false, secretRead: false };
 
                 noticeBtn.style.display = myPerm.notice ? 'inline-block' : 'none';
                 writeFormQna.style.display = myPerm.board ? 'flex' : 'none';
@@ -511,18 +665,30 @@
 
                 if (currentUser.role === '학술부장') {
                     navAdmin.style.display = 'inline-block';
+                    tempRolePerms = JSON.parse(JSON.stringify(rolePerms)); 
+                    tempUserRoles = {};
                     renderAdminRoleSettings();
-                    renderAdminUserLists(); // 회원 목록 및 승인 대기 목록 렌더링
+                    renderAdminUserLists(); 
                 } else {
                     navAdmin.style.display = 'none';
                 }
+
+                if (currentUser.role === '학술부장' || currentUser.role === '학술부 차장' || currentUser.role === '교수') {
+                    if(adminNotiCard) adminNotiCard.style.display = 'block';
+                } else {
+                    if(adminNotiCard) adminNotiCard.style.display = 'none';
+                }
+                
+                updateNotiBadge();
             } else {
                 navAuthBtn.style.display = 'inline-block';
                 navProfileBtn.style.display = 'none';
+                navNotiBtn.style.display = 'none';
                 navAdmin.style.display = 'none';
                 noticeBtn.style.display = 'none';
                 writeFormQna.style.display = 'none';
                 writeFormSuggest.style.display = 'none';
+                if(adminNotiCard) adminNotiCard.style.display = 'none';
             }
             
             renderNotices();
@@ -530,7 +696,6 @@
             renderPosts('suggest');
         }
 
-        // 인증 모달 제어
         function openAuthModal() { document.getElementById('auth-modal').classList.add('open'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.remove('open'); }
         
@@ -539,7 +704,6 @@
             document.getElementById('tab-btn-signup').classList.remove('active');
             document.getElementById('panel-login').classList.remove('active');
             document.getElementById('panel-signup').classList.remove('active');
-
             if(type === 'login') {
                 document.getElementById('tab-btn-login').classList.add('active');
                 document.getElementById('panel-login').classList.add('active');
@@ -552,21 +716,17 @@
         function doLogin() {
             const id = document.getElementById('login-id').value.trim();
             const pw = document.getElementById('login-pw').value.trim();
-            
             if(!id || !pw) { alert('학번과 비밀번호를 입력해주세요.'); return; }
 
             const user = usersDB.find(u => u.id === id && u.password === pw);
             if (user) {
-                // 승인 대기 상태 체크 (추가된 기능)
                 if (user.status === 'pending') {
                     alert('현재 학술부장의 가입 승인을 대기 중입니다. 승인 후 로그인 가능합니다.');
                     return;
                 }
-
                 currentUser = user;
                 sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
                 alert(`[${user.role}] ${user.nickname}님 환영합니다.`);
-                
                 document.getElementById('login-id').value = '';
                 document.getElementById('login-pw').value = '';
                 closeAuthModal();
@@ -587,13 +747,11 @@
             if(pw !== pwConf) { alert('설정된 비밀번호와 비밀번호 확인이 서로 다릅니다.'); return; }
             if(usersDB.find(u => u.id === id)) { alert('이미 데이터 상에 가입 처리된 학번입니다.'); return; }
 
-            // 회원가입 시 status를 'pending' (가입 대기) 상태로 저장
             const newUser = { id, password: pw, name, nickname: nick, role: '학생', status: 'pending' };
             usersDB.push(newUser);
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
             
             alert('가입 신청이 완료되었습니다. 관리자 승인 후 로그인이 가능합니다.');
-            
             document.getElementById('signup-id').value = '';
             document.getElementById('signup-pw').value = '';
             document.getElementById('signup-pw-confirm').value = '';
@@ -602,18 +760,14 @@
             switchAuthTab('login');
         }
 
-        // 프로필 모달 및 로그아웃
         function openProfileModal() { document.getElementById('profile-modal').classList.add('open'); }
         function closeProfileModal() { document.getElementById('profile-modal').classList.remove('open'); }
 
-        // 닉네임 변경 로직
         function changeNickname() {
             if(!currentUser) return;
             const newNick = prompt("새로운 닉네임을 입력하세요:", currentUser.nickname);
-            
             if(newNick !== null && newNick.trim() !== "") {
                 const trimmedNick = newNick.trim();
-                
                 currentUser.nickname = trimmedNick;
                 sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
                 
@@ -622,15 +776,25 @@
                     usersDB[userIndex].nickname = trimmedNick;
                     localStorage.setItem('usersDB', JSON.stringify(usersDB));
                 }
-
                 posts.qna.forEach(p => { if(p.authorId === currentUser.id) p.authorNickname = trimmedNick; });
                 posts.suggest.forEach(p => { if(p.authorId === currentUser.id) p.authorNickname = trimmedNick; });
                 localStorage.setItem('posts_qna', JSON.stringify(posts.qna));
                 localStorage.setItem('posts_suggest', JSON.stringify(posts.suggest));
-
                 alert('닉네임이 성공적으로 변경되었습니다.');
                 updateAuthUI();
             }
+        }
+
+        function withdrawSelf() {
+            if(!confirm("정말 학술부를 탈퇴하시겠습니까?\n작성한 글은 유지되나, 탈퇴 후 계정 복구는 불가능합니다.")) return;
+            usersDB = usersDB.filter(u => u.id !== currentUser.id);
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            currentUser = null;
+            sessionStorage.removeItem('currentUser');
+            alert("회원 탈퇴가 완료되었습니다.");
+            closeProfileModal();
+            updateAuthUI();
+            showTab('home', document.querySelector('.nav-tab'));
         }
 
         function doLogout() {
@@ -640,11 +804,112 @@
                 alert('정상 로그아웃 처리되었습니다.');
                 closeProfileModal();
                 updateAuthUI();
-                
-                if(document.getElementById('tab-admin').classList.contains('active')) {
-                    showTab('home', document.querySelector('.nav-tab'));
-                }
+                if(document.getElementById('tab-admin').classList.contains('active')) showTab('home', document.querySelector('.nav-tab'));
             }
+        }
+
+        // ==========================================
+        // 2-1. 개별 알림 읽음 처리 시스템 로직 
+        // ==========================================
+        function updateNotiBadge() {
+            if(!currentUser) return;
+            const myNotis = notifications.filter(n => (n.target === 'all' || n.target.includes(currentUser.id)));
+            const unreadNotis = myNotis.filter(n => !n.readBy.includes(currentUser.id));
+            
+            const badge = document.getElementById('noti-badge-count');
+            if (unreadNotis.length > 0) {
+                badge.style.display = 'block';
+                badge.innerText = unreadNotis.length;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function openNotiModal() {
+            if(!currentUser) return;
+            document.getElementById('noti-modal').classList.add('open');
+            const list = document.getElementById('my-noti-list');
+            list.innerHTML = '';
+
+            const myNotis = notifications.filter(n => (n.target === 'all' || n.target.includes(currentUser.id))).reverse();
+            
+            if (myNotis.length === 0) {
+                list.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">새로운 알림이 없습니다.</div>';
+                return;
+            }
+
+            myNotis.forEach(n => {
+                const isRead = n.readBy.includes(currentUser.id);
+                const div = document.createElement('div');
+                div.className = `noti-item ${isRead ? '' : 'unread'}`;
+                
+                // 안 읽은 알림만 클릭 이벤트 부여
+                if(!isRead) {
+                    div.title = "클릭하여 읽음 처리";
+                    div.onclick = function() { markAsRead(n.id, this); };
+                }
+                
+                div.innerHTML = `<h4>${n.title}</h4><p>${n.msg}</p><p style="font-size:0.75em; color:#aaa; margin-top:6px;">${n.date}</p>`;
+                list.appendChild(div);
+            });
+        }
+
+        // 특정 알림만 읽음 처리 후 배지 차감
+        function markAsRead(notiId, el) {
+            const noti = notifications.find(n => n.id === notiId);
+            if(noti && !noti.readBy.includes(currentUser.id)) {
+                noti.readBy.push(currentUser.id);
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                
+                // UI 즉각 반영
+                el.classList.remove('unread');
+                el.style.cursor = 'default';
+                el.title = "";
+                el.onclick = null; 
+                
+                updateNotiBadge();
+            }
+        }
+
+        function closeNotiModal() {
+            document.getElementById('noti-modal').classList.remove('open');
+        }
+
+        function clearNotis() {
+            if(!confirm("나의 알림 기록을 모두 지우시겠습니까?")) return;
+            notifications = notifications.filter(n => {
+                if (n.target === 'all') return true; 
+                return !n.target.includes(currentUser.id);
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            openNotiModal(); 
+        }
+
+        function sendNotification() {
+            const title = document.getElementById('noti-send-title').value.trim();
+            const msg = document.getElementById('noti-send-msg').value.trim();
+            const target = document.getElementById('noti-send-target').value;
+            
+            if(!title || !msg) { alert('제목과 내용을 모두 입력해주세요.'); return; }
+
+            const now = new Date();
+            const date = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            const newNoti = {
+                id: 'noti_' + new Date().getTime(),
+                title: title,
+                msg: msg,
+                target: target === 'all' ? 'all' : [target],
+                date: date,
+                readBy: []
+            };
+
+            notifications.push(newNoti);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            alert('알림이 발송되었습니다.');
+            document.getElementById('noti-send-title').value = '';
+            document.getElementById('noti-send-msg').value = '';
         }
 
         // ==========================================
@@ -654,57 +919,52 @@
             const wrapper = document.getElementById('admin-permission-settings');
             wrapper.innerHTML = '';
             AVAILABLE_ROLES.forEach(role => {
-                const isNoticeChecked = rolePerms[role].notice ? 'checked' : '';
-                const isBoardChecked = rolePerms[role].board ? 'checked' : '';
+                const p = tempRolePerms[role] || rolePerms[role];
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="text-align:left; font-weight:bold;">${role}</td>
-                    <td><input type="checkbox" data-role="${role}" data-type="notice" ${isNoticeChecked} onchange="updateRolePermission(this)"></td>
-                    <td><input type="checkbox" data-role="${role}" data-type="board" ${isBoardChecked} onchange="updateRolePermission(this)"></td>
+                    <td><input type="checkbox" data-role="${role}" data-type="notice" ${p.notice ? 'checked' : ''} onchange="tempUpdatePerm(this)"></td>
+                    <td><input type="checkbox" data-role="${role}" data-type="board" ${p.board ? 'checked' : ''} onchange="tempUpdatePerm(this)"></td>
+                    <td><input type="checkbox" data-role="${role}" data-type="secretRead" ${p.secretRead ? 'checked' : ''} onchange="tempUpdatePerm(this)"></td>
                 `;
                 wrapper.appendChild(tr);
             });
         }
 
-        function updateRolePermission(element) {
+        function tempUpdatePerm(element) {
             const role = element.getAttribute('data-role');
             const type = element.getAttribute('data-type');
-            const value = element.checked;
-            rolePerms[role][type] = value;
+            tempRolePerms[role][type] = element.checked;
+        }
+
+        function savePermissions() {
+            rolePerms = JSON.parse(JSON.stringify(tempRolePerms));
             localStorage.setItem('rolePermissions', JSON.stringify(rolePerms));
-            
-            if(currentUser && currentUser.role === role) {
-                currentUser = usersDB.find(u => u.id === currentUser.id);
-                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-            }
+            alert("설정값이 성공적으로 저장되었습니다!");
             updateAuthUI();
         }
 
-        // 대기자 목록 및 승인된 유저 목록 동시 렌더링
         function renderAdminUserLists() {
             const pendingTbody = document.getElementById('admin-pending-list');
             const approvedTbody = document.getElementById('admin-user-list');
+            const notiTarget = document.getElementById('noti-send-target');
+            
             pendingTbody.innerHTML = '';
             approvedTbody.innerHTML = '';
+            if(notiTarget) notiTarget.innerHTML = '<option value="all">전체 회원</option>';
 
-            // 기존 데이터 하위호환: status 값이 없는 유저는 approved로 강제 변환
-            usersDB.forEach(u => {
-                if (!u.status) u.status = 'approved';
-            });
+            usersDB.forEach(u => { if (!u.status) u.status = 'approved'; });
 
             const pendingUsers = usersDB.filter(u => u.status === 'pending');
             const approvedUsers = usersDB.filter(u => u.status === 'approved');
 
-            // 가입 대기자 목록 렌더링
             if (pendingUsers.length === 0) {
                 pendingTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#aaa; padding:20px;">가입 승인 대기 중인 인원이 없습니다.</td></tr>';
             } else {
                 pendingUsers.forEach(user => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${user.id}</td>
-                        <td>${user.name}</td>
-                        <td>${user.nickname}</td>
+                        <td>${user.id}</td><td>${user.name}</td><td>${user.nickname}</td>
                         <td>
                             <button class="primary-btn" style="padding:4px 10px; font-size:0.8em;" onclick="approveUser('${user.id}')">승인</button>
                             <button class="delete-btn" style="padding:4px 10px; font-size:0.8em; margin-left:4px;" onclick="rejectUser('${user.id}')">거절</button>
@@ -714,78 +974,92 @@
                 });
             }
 
-            // 기존 승인된 회원 관리 목록 렌더링
             approvedUsers.forEach((user) => {
+                if(notiTarget) notiTarget.innerHTML += `<option value="${user.id}">${user.name} (${user.nickname})</option>`;
+
+                const kickBtnHtml = (user.id !== currentUser.id) 
+                    ? `<button class="delete-btn" style="margin-left:0; padding:6px 12px;" onclick="kickUser('${user.id}')">강제 탈퇴</button>` 
+                    : `<span style="color:#aaa; font-size:0.8em;">본인</span>`;
+
                 const tr = document.createElement('tr');
                 let selectOptionsHtml = '';
+                
+                let currentDispRole = tempUserRoles[user.id] || user.role;
+                
                 AVAILABLE_ROLES.forEach(r => {
-                    const selected = (user.role === r) ? 'selected' : '';
-                    selectOptionsHtml += `<option value="${r}" ${selected}>${r}</option>`;
+                    selectOptionsHtml += `<option value="${r}" ${currentDispRole === r ? 'selected' : ''}>${r}</option>`;
                 });
                 tr.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.nickname}</td>
-                    <td style="font-weight:bold; color:#007bff;">${user.role}</td>
+                    <td>${user.id}</td><td>${user.name}</td><td>${user.nickname}</td>
                     <td>
-                        <select onchange="delegateUserRole('${user.id}', this.value)">
+                        <select onchange="tempUpdateRole('${user.id}', this.value)" style="margin-right:10px;">
                             ${selectOptionsHtml}
                         </select>
                     </td>
+                    <td>${kickBtnHtml}</td>
                 `;
                 approvedTbody.appendChild(tr);
             });
         }
 
-        // 가입 승인 함수
+        function tempUpdateRole(userId, newRole) {
+            tempUserRoles[userId] = newRole;
+        }
+
+        function saveUserRoles() {
+            let roleChanged = false;
+            Object.keys(tempUserRoles).forEach(userId => {
+                const target = usersDB.find(u => u.id === userId);
+                if (target && target.role !== tempUserRoles[userId]) {
+                    target.role = tempUserRoles[userId];
+                    posts.qna.forEach(p => { if(p.authorId === userId) p.authorRole = tempUserRoles[userId]; });
+                    posts.suggest.forEach(p => { if(p.authorId === userId) p.authorRole = tempUserRoles[userId]; });
+                    roleChanged = true;
+                    
+                    if(currentUser && currentUser.id === userId) {
+                        currentUser.role = tempUserRoles[userId];
+                        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    }
+                }
+            });
+
+            if(roleChanged) {
+                localStorage.setItem('usersDB', JSON.stringify(usersDB));
+                localStorage.setItem('posts_qna', JSON.stringify(posts.qna));
+                localStorage.setItem('posts_suggest', JSON.stringify(posts.suggest));
+            }
+            
+            tempUserRoles = {}; 
+            alert("설정값이 성공적으로 저장되었습니다!");
+            updateAuthUI();
+
+            if(currentUser && currentUser.role !== '학술부장') {
+                showTab('home', document.querySelector('.nav-tab'));
+            }
+        }
+
         function approveUser(userId) {
             const target = usersDB.find(u => u.id === userId);
-            if(target) {
-                target.status = 'approved';
-                localStorage.setItem('usersDB', JSON.stringify(usersDB));
-                renderAdminUserLists(); // 리스트 새로고침
-            }
+            if(target) { target.status = 'approved'; localStorage.setItem('usersDB', JSON.stringify(usersDB)); renderAdminUserLists(); }
         }
-
-        // 가입 거절(삭제) 함수
         function rejectUser(userId) {
-            if(!confirm('해당 인원의 가입을 거절하고 정보를 삭제하시겠습니까?')) return;
+            if(!confirm('가입을 거절하고 정보를 삭제하시겠습니까?')) return;
             usersDB = usersDB.filter(u => u.id !== userId);
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
-            renderAdminUserLists(); // 리스트 새로고침
+            renderAdminUserLists(); 
         }
-
-        function delegateUserRole(targetUserId, selectedNewRole) {
-            const targetUser = usersDB.find(u => u.id === targetUserId);
+        function kickUser(userId) {
+            const targetUser = usersDB.find(u => u.id === userId);
             if(!targetUser) return;
-
-            if(!confirm(`[${targetUser.nickname}] 부원의 직급을 [${selectedNewRole}](으)로 변경하겠습니까?`)) {
-                renderAdminUserLists(); 
-                return;
-            }
-
-            targetUser.role = selectedNewRole;
+            if(!confirm(`[${targetUser.nickname}] 부원을 정말 강제 탈퇴시키겠습니까?\n해당 유저는 더 이상 로그인 할 수 없습니다.`)) return;
+            usersDB = usersDB.filter(u => u.id !== userId);
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
-            alert('등급 권한 위임이 완료되었습니다.');
-
-            posts.qna.forEach(p => { if(p.authorId === targetUserId) p.authorRole = selectedNewRole; });
-            posts.suggest.forEach(p => { if(p.authorId === targetUserId) p.authorRole = selectedNewRole; });
-            localStorage.setItem('posts_qna', JSON.stringify(posts.qna));
-            localStorage.setItem('posts_suggest', JSON.stringify(posts.suggest));
-
-            if(currentUser && currentUser.id === targetUserId) {
-                currentUser.role = selectedNewRole;
-                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                if(selectedNewRole !== '학술부장') {
-                    alert('최고 관리자 권한이 해제되어 권한 관리 탭이 종료됩니다.');
-                    showTab('home', document.querySelector('.nav-tab'));
-                }
-            }
-            updateAuthUI();
+            alert('강제 탈퇴 처리가 완료되었습니다.');
+            renderAdminUserLists();
         }
 
         // ==========================================
-        // 기본 컴포넌트 렌더 및 구조
+        // 4. 탭 이동 및 기타 기능
         // ==========================================
         const logoData = [
             { src: "JEJU AIR.png", alt: "제주항공" },
@@ -828,23 +1102,13 @@
             updateAuthUI();
         }
         
-        function toggleTheme() {
-            document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-        }
-        function adjustFont(val) {
-            document.body.style.fontSize = val + 'px';
-            document.getElementById('font-val').innerText = val;
-        }
-        function adjustWidth(val) {
-            document.querySelector('.content-area').style.maxWidth = val + 'px';
-            document.getElementById('width-val').innerText = val;
-        }
+        function toggleTheme() { document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
+        function adjustFont(val) { document.body.style.fontSize = val + 'px'; }
+        function adjustWidth(val) { document.querySelector('.content-area').style.maxWidth = val + 'px'; }
 
         // ==========================================
-        // 게시판 처리
+        // 5. 게시판 및 비밀글 열람 로직
         // ==========================================
-        let notices = JSON.parse(localStorage.getItem('notices') || '[]');
-        
         function renderNotices() {
             const list = document.getElementById('notice-list');
             const empty = document.getElementById('notice-empty');
@@ -900,21 +1164,29 @@
             empty.style.display = 'none';
             
             posts[type].slice().reverse().forEach((p, index) => {
+                const realIndex = posts[type].length - 1 - index;
                 const div = document.createElement('div');
                 div.className = 'post-item';
                 
                 let deleteBtnHtml = '';
                 if (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) {
-                    const realIndex = posts[type].length - 1 - index;
                     deleteBtnHtml = `<button class="delete-btn" onclick="deletePost('${type}', ${realIndex})">삭제</button>`;
+                }
+
+                let displayTitle = p.title;
+                let displayContent = p.content;
+
+                if (p.isSecret) {
+                    displayTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`;
+                    displayContent = `<button class="primary-btn" style="padding:6px 12px; font-size:0.85em; background:#6c757d;" onclick="unlockSecretPost('${type}', ${realIndex}, this)">비밀번호 입력 및 내용 확인</button>`;
                 }
 
                 div.innerHTML = `
                     <div class="post-header-wrap">
-                        <div class="post-title">${p.title}</div>
+                        <div class="post-title" id="title-${type}-${realIndex}">${displayTitle}</div>
                         ${deleteBtnHtml}
                     </div>
-                    <div class="post-content">${p.content}</div>
+                    <div class="post-content" id="content-${type}-${realIndex}">${displayContent}</div>
                     <div class="post-meta">
                         <span class="post-author" style="color:#007bff; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span>
                         <span class="post-date">${p.date}</span>
@@ -922,6 +1194,31 @@
                 `;
                 list.appendChild(div);
             });
+        }
+
+        function unlockSecretPost(type, index, btnEl) {
+            if(!currentUser) { alert('로그인이 필요합니다.'); return; }
+            
+            const p = posts[type][index];
+            const myPerm = rolePerms[currentUser.role] || {};
+
+            if (myPerm.secretRead || p.authorId === currentUser.id) {
+                if(p.authorId !== currentUser.id) alert("해당 계정은 비밀글 열람 권한이 있어 내용이 공개됩니다.");
+                document.getElementById(`title-${type}-${index}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${p.title}`;
+                document.getElementById(`content-${type}-${index}`).innerText = p.content;
+                return;
+            }
+
+            const enteredPw = prompt("비밀글을 확인하시려면 이 글 작성자의 로그인 비밀번호를 입력해주세요.");
+            if (enteredPw === null) return;
+
+            const author = usersDB.find(u => u.id === p.authorId);
+            if (author && enteredPw === author.password) {
+                document.getElementById(`title-${type}-${index}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${p.title}`;
+                document.getElementById(`content-${type}-${index}`).innerText = p.content;
+            } else {
+                alert("비밀번호가 일치하지 않거나 열람 권한이 없습니다.");
+            }
         }
 
         function submitPost(type) {
@@ -932,13 +1229,23 @@
 
             const title = document.getElementById(type + '-title').value.trim();
             const content = document.getElementById(type + '-content').value.trim();
+            const isSecret = document.getElementById(type + '-is-secret').checked;
+
             if (!title || !content) { alert('내용을 입력하세요.'); return; }
+            
+            if (isSecret) {
+                const confirmPw = prompt("🔒 비밀글로 작성하시려면 본인의 현재 로그인 비밀번호를 한 번 더 입력해주세요.");
+                if (confirmPw !== currentUser.password) {
+                    alert("비밀번호가 일치하지 않아 등록이 취소되었습니다.");
+                    return;
+                }
+            }
             
             const now = new Date();
             const date = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
             
             posts[type].push({ 
-                title, content, date,
+                title, content, date, isSecret,
                 authorId: currentUser.id,
                 authorNickname: currentUser.nickname,
                 authorRole: currentUser.role
@@ -947,6 +1254,7 @@
             localStorage.setItem('posts_' + type, JSON.stringify(posts[type]));
             document.getElementById(type + '-title').value = '';
             document.getElementById(type + '-content').value = '';
+            document.getElementById(type + '-is-secret').checked = false; 
             renderPosts(type);
         }
 
@@ -958,7 +1266,7 @@
         }
 
         // ==========================================
-        // 기출문제 
+        // 6. 기출문제 데이터
         // ==========================================
         const airlineData = {
             "제주항공": ["2016년 1차", "2017년 1차", "2017년 2차", "2017년 3차", "2018년 1차", "2018년 2차", "2025년 1차"],
