@@ -344,7 +344,8 @@
                                     <th>승인 / 거절</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-pending-list"></tbody>
+                            <tbody id="admin-pending-list">
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -361,7 +362,8 @@
                                     <th>일반 게시글 작성 (Q&A/건의)</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-permission-settings"></tbody>
+                            <tbody id="admin-permission-settings">
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -380,7 +382,8 @@
                                     <th>등급 변경 (위임)</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-user-list"></tbody>
+                            <tbody id="admin-user-list">
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -443,142 +446,91 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // 파이어베이스 콘솔 고유 설정 데이터 동기화
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXJM6kE-czCRxXwQyt5Rw40f5W9PnvdDE",
-            authDomain: "cudh-56f9f.firebaseapp.com",
-            projectId: "cudh-56f9f",
-            storageBucket: "cudh-56f9f.firebasestorage.app",
-            messagingSenderId: "486551124949",
-            appId: "1:486551124949:web:00198dadacefc5ea0ddb5c",
-            measurementId: "G-N4DDDDOYCC"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
+    <script>
+        // ==========================================
+        // 1. 글로벌 설정 데이터 정의 및 초기화
+        // ==========================================
         const AVAILABLE_ROLES = ['학생', '학술부 조장', '학술부 차장', '학술부장', '교수'];
         
-        let rolePerms = {
-            '학생': { notice: false, board: true },
-            '학술부 조장': { notice: false, board: true },
-            '학술부 차장': { notice: true, board: true },
-            '학술부장': { notice: true, board: true },
-            '교수': { notice: true, board: true }
-        };
+        let rolePerms = JSON.parse(localStorage.getItem('rolePermissions'));
+        if(!rolePerms) {
+            rolePerms = {
+                '학생': { notice: false, board: true },
+                '학술부 조장': { notice: false, board: true },
+                '학술부 차장': { notice: true, board: true },
+                '학술부장': { notice: true, board: true },
+                '교수': { notice: true, board: true }
+            };
+            localStorage.setItem('rolePermissions', JSON.stringify(rolePerms));
+        }
+
+        let usersDB = JSON.parse(localStorage.getItem('usersDB'));
+        if (!usersDB) {
+            // 관리자 계정은 기본적으로 승인(approved) 상태로 생성
+            usersDB = [
+                { id: '21181016', password: 'woojin0710!', name: '신우진', nickname: '최고관리자', role: '학술부장', status: 'approved' }
+            ];
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+        }
 
         let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
-        let usersListCache = []; 
-        let posts = { qna: [], suggest: [], notices: [] };
 
-        window.startApp = startApp;
-        window.showTab = showTab;
-        window.showComm = showComm;
-        window.toggleTheme = toggleTheme;
-        window.adjustFont = adjustFont;
-        window.adjustWidth = adjustWidth;
-        window.openAuthModal = openAuthModal;
-        window.closeAuthModal = closeAuthModal;
-        window.switchAuthTab = switchAuthTab;
-        window.doLogin = doLogin;
-        window.doSignup = doSignup;
-        window.openProfileModal = openProfileModal;
-        window.closeProfileModal = closeProfileModal;
-        window.changeNickname = changeNickname;
-        window.doLogout = doLogout;
-        window.openNoticeModal = openNoticeModal;
-        window.closeNoticeModal = closeNoticeModal;
-        window.submitNotice = submitNotice;
-        window.deleteNotice = deleteNotice;
-        window.submitPost = submitPost;
-        window.deletePost = deletePost;
-        window.approveUser = approveUser;
-        window.rejectUser = rejectUser;
-        window.delegateUserRole = delegateUserRole;
-        window.updateYearOptions = updateYearOptions;
+        let posts = { 
+            qna: JSON.parse(localStorage.getItem('posts_qna') || '[]'), 
+            suggest: JSON.parse(localStorage.getItem('posts_suggest') || '[]') 
+        };
 
-        function startApp() {
-            document.getElementById('intro-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'flex';
-            
-            initRealtimeListeners();
-            updateAuthUI();
-        }
-
-        function initRealtimeListeners() {
-            onSnapshot(collection(db, "notices"), (snapshot) => {
-                posts.notices = [];
-                snapshot.forEach(doc => posts.notices.push({ id: doc.id, ...doc.data() }));
-                posts.notices.sort((a, b) => a.date.localeCompare(b.date));
-                renderNotices();
-            });
-
-            onSnapshot(collection(db, "posts_qna"), (snapshot) => {
-                posts.qna = [];
-                snapshot.forEach(doc => posts.qna.push({ id: doc.id, ...doc.data() }));
-                posts.qna.sort((a, b) => a.date.localeCompare(b.date));
-                renderPosts('qna');
-            });
-
-            onSnapshot(collection(db, "posts_suggest"), (snapshot) => {
-                posts.suggest = [];
-                snapshot.forEach(doc => posts.suggest.push({ id: doc.id, ...doc.data() }));
-                posts.suggest.sort((a, b) => a.date.localeCompare(b.date));
-                renderPosts('suggest');
-            });
-
-            if (currentUser && currentUser.role === '학술부장') {
-                onSnapshot(collection(db, "users"), (snapshot) => {
-                    usersListCache = [];
-                    snapshot.forEach(doc => usersListCache.push(doc.data()));
-                    renderAdminUserLists();
-                });
-            }
-        }
-
+        // ==========================================
+        // 2. 인증 및 UI 상태 제어
+        // ==========================================
         function updateAuthUI() {
             const navAuthBtn = document.getElementById('nav-auth-btn');
             const navProfileBtn = document.getElementById('nav-profile-btn');
             const navAdmin = document.getElementById('nav-admin');
             const noticeBtn = document.getElementById('btn-create-notice');
+            
             const writeFormQna = document.getElementById('write-form-qna');
             const writeFormSuggest = document.getElementById('write-form-suggest');
 
             if (currentUser) {
-                if (navAuthBtn) navAuthBtn.style.display = 'none';
-                if (navProfileBtn) navProfileBtn.style.display = 'inline-block';
+                // 상단 네비게이션 버튼 교체
+                navAuthBtn.style.display = 'none';
+                navProfileBtn.style.display = 'inline-block';
                 
+                // 프로필 정보 맵핑
                 document.getElementById('profile-user-role').innerText = currentUser.role;
                 document.getElementById('profile-user-nick').innerText = currentUser.nickname;
                 document.getElementById('profile-user-name').innerText = currentUser.name;
                 document.getElementById('profile-user-id').innerText = currentUser.id;
 
                 const myPerm = rolePerms[currentUser.role] || { notice: false, board: false };
-                if (noticeBtn) noticeBtn.style.display = myPerm.notice ? 'inline-block' : 'none';
-                if (writeFormQna) writeFormQna.style.display = myPerm.board ? 'flex' : 'none';
-                if (writeFormSuggest) writeFormSuggest.style.display = myPerm.board ? 'flex' : 'none';
+
+                noticeBtn.style.display = myPerm.notice ? 'inline-block' : 'none';
+                writeFormQna.style.display = myPerm.board ? 'flex' : 'none';
+                writeFormSuggest.style.display = myPerm.board ? 'flex' : 'none';
 
                 if (currentUser.role === '학술부장') {
-                    if (navAdmin) navAdmin.style.display = 'inline-block';
+                    navAdmin.style.display = 'inline-block';
                     renderAdminRoleSettings();
-                    initRealtimeListeners(); 
+                    renderAdminUserLists(); // 회원 목록 및 승인 대기 목록 렌더링
                 } else {
-                    if (navAdmin) navAdmin.style.display = 'none';
+                    navAdmin.style.display = 'none';
                 }
             } else {
-                if (navAuthBtn) navAuthBtn.style.display = 'inline-block';
-                if (navProfileBtn) navProfileBtn.style.display = 'none';
-                if (navAdmin) navAdmin.style.display = 'none';
-                if (noticeBtn) noticeBtn.style.display = 'none';
-                if (writeFormQna) writeFormQna.style.display = 'none';
-                if (writeFormSuggest) writeFormSuggest.style.display = 'none';
+                navAuthBtn.style.display = 'inline-block';
+                navProfileBtn.style.display = 'none';
+                navAdmin.style.display = 'none';
+                noticeBtn.style.display = 'none';
+                writeFormQna.style.display = 'none';
+                writeFormSuggest.style.display = 'none';
             }
+            
+            renderNotices();
+            renderPosts('qna');
+            renderPosts('suggest');
         }
 
+        // 인증 모달 제어
         function openAuthModal() { document.getElementById('auth-modal').classList.add('open'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.remove('open'); }
         
@@ -597,106 +549,98 @@
             }
         }
 
-        // 로그인 인증 로직 (대기상태 체크 포함)
-        async function doLogin() {
+        function doLogin() {
             const id = document.getElementById('login-id').value.trim();
             const pw = document.getElementById('login-pw').value.trim();
             
             if(!id || !pw) { alert('학번과 비밀번호를 입력해주세요.'); return; }
 
-            try {
-                const userDoc = await getDoc(doc(db, "users", id));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    if (userData.password === pw) {
-                        if (userData.status === 'pending') {
-                            alert('현재 가입 대기중 입니다!\n학술부장의 가입 승인 처리 완료 후 로그인이 가능합니다.');
-                            return;
-                        }
-                        currentUser = userData;
-                        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        alert(`[${userData.role}] ${userData.nickname}님 환영합니다.`);
-                        
-                        document.getElementById('login-id').value = '';
-                        document.getElementById('login-pw').value = '';
-                        closeAuthModal();
-                        startApp(); 
-                    } else {
-                        alert('비밀번호가 맞지 않습니다.');
-                    }
-                } else {
-                    alert('가입 내역이 없는 학번입니다.');
+            const user = usersDB.find(u => u.id === id && u.password === pw);
+            if (user) {
+                // 승인 대기 상태 체크 (추가된 기능)
+                if (user.status === 'pending') {
+                    alert('현재 학술부장의 가입 승인을 대기 중입니다. 승인 후 로그인 가능합니다.');
+                    return;
                 }
-            } catch (e) { alert('로그인 통신 실패: ' + e.message); }
+
+                currentUser = user;
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                alert(`[${user.role}] ${user.nickname}님 환영합니다.`);
+                
+                document.getElementById('login-id').value = '';
+                document.getElementById('login-pw').value = '';
+                closeAuthModal();
+                updateAuthUI();
+            } else {
+                alert('학번 또는 비밀번호를 다시 확인해 주세요.');
+            }
         }
 
-        // 회원가입 요청 로직 (요청 문구 변경 완료)
-        async function doSignup() {
+        function doSignup() {
             const id = document.getElementById('signup-id').value.trim();
             const pw = document.getElementById('signup-pw').value.trim();
             const pwConf = document.getElementById('signup-pw-confirm').value.trim();
             const name = document.getElementById('signup-name').value.trim();
             const nick = document.getElementById('signup-nick').value.trim();
 
-            if(!id || !pw || !pwConf || !name || !nick) { alert('모든 가입 양식을 채워주세요.'); return; }
-            if(pw !== pwConf) { alert('설정하신 비밀번호가 서로 매칭되지 않습니다.'); return; }
+            if(!id || !pw || !pwConf || !name || !nick) { alert('모든 항목 필드를 채워주세요.'); return; }
+            if(pw !== pwConf) { alert('설정된 비밀번호와 비밀번호 확인이 서로 다릅니다.'); return; }
+            if(usersDB.find(u => u.id === id)) { alert('이미 데이터 상에 가입 처리된 학번입니다.'); return; }
 
-            try {
-                const userCheck = await getDoc(doc(db, "users", id));
-                if (userCheck.exists()) {
-                    alert('이미 가입을 신청했거나 활성화된 학번입니다.');
-                    return;
-                }
-
-                // 학술부장 자동패스 지정 및 일반 부원 대기 처리
-                const targetRole = (id === '21181016') ? '학술부장' : '학생';
-                const targetStatus = (id === '21181016') ? 'approved' : 'pending';
-
-                const newUser = { id, password: pw, name, nickname: nick, role: targetRole, status: targetStatus };
-                await setDoc(doc(db, "users", id), newUser);
-                
-                if(targetStatus === 'approved') {
-                    alert('최고 관리자(학술부장) 계정이 즉시 개설 승인되었습니다. 로그인을 시도하세요.');
-                } else {
-                    // 사용자 요청 사항: 일반 가입 신청자 대상 알림창 팝업 문구 변경 적용
-                    alert('가입 대기중 입니다!');
-                }
-                
-                document.getElementById('signup-id').value = '';
-                document.getElementById('signup-pw').value = '';
-                document.getElementById('signup-pw-confirm').value = '';
-                document.getElementById('signup-name').value = '';
-                document.getElementById('signup-nick').value = '';
-                switchAuthTab('login');
-            } catch (e) { alert('회원 등록 처리 중 데이터 오류: ' + e.message); }
+            // 회원가입 시 status를 'pending' (가입 대기) 상태로 저장
+            const newUser = { id, password: pw, name, nickname: nick, role: '학생', status: 'pending' };
+            usersDB.push(newUser);
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            
+            alert('가입 신청이 완료되었습니다. 관리자 승인 후 로그인이 가능합니다.');
+            
+            document.getElementById('signup-id').value = '';
+            document.getElementById('signup-pw').value = '';
+            document.getElementById('signup-pw-confirm').value = '';
+            document.getElementById('signup-name').value = '';
+            document.getElementById('signup-nick').value = '';
+            switchAuthTab('login');
         }
 
+        // 프로필 모달 및 로그아웃
         function openProfileModal() { document.getElementById('profile-modal').classList.add('open'); }
         function closeProfileModal() { document.getElementById('profile-modal').classList.remove('open'); }
 
-        async function changeNickname() {
+        // 닉네임 변경 로직
+        function changeNickname() {
             if(!currentUser) return;
-            const newNick = prompt("수정할 새로운 닉네임을 작성하세요:", currentUser.nickname);
+            const newNick = prompt("새로운 닉네임을 입력하세요:", currentUser.nickname);
             
             if(newNick !== null && newNick.trim() !== "") {
                 const trimmedNick = newNick.trim();
-                try {
-                    await updateDoc(doc(db, "users", currentUser.id), { nickname: trimmedNick });
-                    currentUser.nickname = trimmedNick;
-                    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    alert('닉네임이 시스템에 성공적으로 교체되었습니다.');
-                    updateAuthUI();
-                } catch(e) { alert('닉네임 교체 오류: ' + e.message); }
+                
+                currentUser.nickname = trimmedNick;
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                const userIndex = usersDB.findIndex(u => u.id === currentUser.id);
+                if(userIndex > -1) {
+                    usersDB[userIndex].nickname = trimmedNick;
+                    localStorage.setItem('usersDB', JSON.stringify(usersDB));
+                }
+
+                posts.qna.forEach(p => { if(p.authorId === currentUser.id) p.authorNickname = trimmedNick; });
+                posts.suggest.forEach(p => { if(p.authorId === currentUser.id) p.authorNickname = trimmedNick; });
+                localStorage.setItem('posts_qna', JSON.stringify(posts.qna));
+                localStorage.setItem('posts_suggest', JSON.stringify(posts.suggest));
+
+                alert('닉네임이 성공적으로 변경되었습니다.');
+                updateAuthUI();
             }
         }
 
         function doLogout() {
-            if(confirm('로그아웃을 처리하시겠습니까?')) {
+            if(confirm('로그아웃을 진행하시겠습니까?')) {
                 currentUser = null;
                 sessionStorage.removeItem('currentUser');
-                alert('안전하게 로그아웃 되었습니다.');
+                alert('정상 로그아웃 처리되었습니다.');
                 closeProfileModal();
                 updateAuthUI();
+                
                 if(document.getElementById('tab-admin').classList.contains('active')) {
                     showTab('home', document.querySelector('.nav-tab'));
                 }
@@ -704,11 +648,10 @@
         }
 
         // ==========================================
-        // 백오피스 관리자 관리 명단 처리
+        // 3. 백오피스 관리자 설정 파트 
         // ==========================================
         function renderAdminRoleSettings() {
             const wrapper = document.getElementById('admin-permission-settings');
-            if(!wrapper) return;
             wrapper.innerHTML = '';
             AVAILABLE_ROLES.forEach(role => {
                 const isNoticeChecked = rolePerms[role].notice ? 'checked' : '';
@@ -716,26 +659,45 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="text-align:left; font-weight:bold;">${role}</td>
-                    <td><input type="checkbox" data-role="${role}" data-type="notice" ${isNoticeChecked} disabled></td>
-                    <td><input type="checkbox" data-role="${role}" data-type="board" ${isBoardChecked} disabled></td>
+                    <td><input type="checkbox" data-role="${role}" data-type="notice" ${isNoticeChecked} onchange="updateRolePermission(this)"></td>
+                    <td><input type="checkbox" data-role="${role}" data-type="board" ${isBoardChecked} onchange="updateRolePermission(this)"></td>
                 `;
                 wrapper.appendChild(tr);
             });
         }
 
+        function updateRolePermission(element) {
+            const role = element.getAttribute('data-role');
+            const type = element.getAttribute('data-type');
+            const value = element.checked;
+            rolePerms[role][type] = value;
+            localStorage.setItem('rolePermissions', JSON.stringify(rolePerms));
+            
+            if(currentUser && currentUser.role === role) {
+                currentUser = usersDB.find(u => u.id === currentUser.id);
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            updateAuthUI();
+        }
+
+        // 대기자 목록 및 승인된 유저 목록 동시 렌더링
         function renderAdminUserLists() {
             const pendingTbody = document.getElementById('admin-pending-list');
             const approvedTbody = document.getElementById('admin-user-list');
-            if(!pendingTbody || !approvedTbody) return;
-
             pendingTbody.innerHTML = '';
             approvedTbody.innerHTML = '';
 
-            const pendingUsers = usersListCache.filter(u => u.status === 'pending');
-            const approvedUsers = usersListCache.filter(u => u.status === 'approved');
+            // 기존 데이터 하위호환: status 값이 없는 유저는 approved로 강제 변환
+            usersDB.forEach(u => {
+                if (!u.status) u.status = 'approved';
+            });
 
+            const pendingUsers = usersDB.filter(u => u.status === 'pending');
+            const approvedUsers = usersDB.filter(u => u.status === 'approved');
+
+            // 가입 대기자 목록 렌더링
             if (pendingUsers.length === 0) {
-                pendingTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#aaa; padding:20px;">가입 승인을 대기하는 신규 부원이 없습니다.</td></tr>';
+                pendingTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#aaa; padding:20px;">가입 승인 대기 중인 인원이 없습니다.</td></tr>';
             } else {
                 pendingUsers.forEach(user => {
                     const tr = document.createElement('tr');
@@ -752,6 +714,7 @@
                 });
             }
 
+            // 기존 승인된 회원 관리 목록 렌더링
             approvedUsers.forEach((user) => {
                 const tr = document.createElement('tr');
                 let selectOptionsHtml = '';
@@ -774,170 +737,56 @@
             });
         }
 
-        async function approveUser(userId) {
-            try {
-                await updateDoc(doc(db, "users", userId), { status: 'approved' });
-                alert('해당 인원의 가입 승인을 정식 처리했습니다.');
-            } catch(e) { alert('승인 실패: ' + e.message); }
+        // 가입 승인 함수
+        function approveUser(userId) {
+            const target = usersDB.find(u => u.id === userId);
+            if(target) {
+                target.status = 'approved';
+                localStorage.setItem('usersDB', JSON.stringify(usersDB));
+                renderAdminUserLists(); // 리스트 새로고침
+            }
         }
 
-        async function rejectUser(userId) {
-            if(!confirm('해당 인원의 가입 신청을 완전히 파기하시겠습니까?')) return;
-            try {
-                await deleteDoc(doc(db, "users", userId));
-                alert('가입 신청 반려 및 정보 파기가 완료되었습니다.');
-            } catch(e) { alert('반려 실패: ' + e.message); }
+        // 가입 거절(삭제) 함수
+        function rejectUser(userId) {
+            if(!confirm('해당 인원의 가입을 거절하고 정보를 삭제하시겠습니까?')) return;
+            usersDB = usersDB.filter(u => u.id !== userId);
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            renderAdminUserLists(); // 리스트 새로고침
         }
 
-        async function delegateUserRole(targetUserId, selectedNewRole) {
-            if(!confirm(`직급 권한을 [${selectedNewRole}](으)로 전격 조정하시겠습니까?`)) {
-                renderAdminUserLists();
+        function delegateUserRole(targetUserId, selectedNewRole) {
+            const targetUser = usersDB.find(u => u.id === targetUserId);
+            if(!targetUser) return;
+
+            if(!confirm(`[${targetUser.nickname}] 부원의 직급을 [${selectedNewRole}](으)로 변경하겠습니까?`)) {
+                renderAdminUserLists(); 
                 return;
             }
-            try {
-                await updateDoc(doc(db, "users", targetUserId), { role: selectedNewRole });
-                alert('직급 가공 권한 처리가 완료되었습니다.');
-            } catch(e) { alert('권한 위임 실패: ' + e.message); }
-        }
 
-        // ==========================================
-        // 게시판 렌더 및 폼 제어부
-        // ==========================================
-        function renderNotices() {
-            const list = document.getElementById('notice-list');
-            const empty = document.getElementById('notice-empty');
-            if(!list) return;
-            list.querySelectorAll('li:not(.notice-empty)').forEach(e => e.remove());
-            
-            if (posts.notices.length === 0) { if(empty) empty.style.display = 'block'; return; }
-            if(empty) empty.style.display = 'none';
-            
-            posts.notices.slice().reverse().forEach((n) => {
-                const li = document.createElement('li');
-                let deleteBtnHtml = '';
-                if (currentUser && (currentUser.role === '학술부장' || n.authorId === currentUser.id)) {
-                    deleteBtnHtml = `<button class="delete-btn" onclick="deleteNotice('${n.id}')">삭제</button>`;
+            targetUser.role = selectedNewRole;
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            alert('등급 권한 위임이 완료되었습니다.');
+
+            posts.qna.forEach(p => { if(p.authorId === targetUserId) p.authorRole = selectedNewRole; });
+            posts.suggest.forEach(p => { if(p.authorId === targetUserId) p.authorRole = selectedNewRole; });
+            localStorage.setItem('posts_qna', JSON.stringify(posts.qna));
+            localStorage.setItem('posts_suggest', JSON.stringify(posts.suggest));
+
+            if(currentUser && currentUser.id === targetUserId) {
+                currentUser.role = selectedNewRole;
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                if(selectedNewRole !== '학술부장') {
+                    alert('최고 관리자 권한이 해제되어 권한 관리 탭이 종료됩니다.');
+                    showTab('home', document.querySelector('.nav-tab'));
                 }
-                li.innerHTML = `<span class="notice-title">📌 ${n.title}</span><span class="notice-date">${n.date} ${deleteBtnHtml}</span>`;
-                list.appendChild(li);
-            });
-        }
-
-        async function submitNotice() {
-            const title = document.getElementById('notice-title-input').value.trim();
-            const content = document.getElementById('notice-content-input').value.trim();
-            if (!title) { alert('공지 제목을 써넣어 주세요.'); return; }
-            
-            const now = new Date();
-            const date = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
-            
-            try {
-                const newNoticeRef = doc(collection(db, "notices"));
-                await setDoc(newNoticeRef, { title, content, date, authorId: currentUser.id });
-                closeNoticeModal();
-            } catch(e) { alert('공지 업로드 실패: ' + e.message); }
-        }
-
-        async function deleteNotice(docId) {
-            if(!confirm("해당 공지를 데이터베이스에서 파기할까요?")) return;
-            try { await deleteDoc(doc(db, "notices", docId)); } catch(e) { alert('공지 제거 실패: ' + e.message); }
-        }
-
-        function renderPosts(type) {
-            const list = document.getElementById(type + '-list');
-            const empty = document.getElementById(type + '-empty');
-            if(!list) return;
-            list.querySelectorAll('.post-item').forEach(e => e.remove());
-            
-            if (posts[type].length === 0) { if(empty) empty.style.display = 'block'; return; }
-            if(empty) empty.style.display = 'none';
-            
-            posts[type].slice().reverse().forEach((p) => {
-                const div = document.createElement('div');
-                div.className = 'post-item';
-                
-                let deleteBtnHtml = '';
-                if (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) {
-                    deleteBtnHtml = `<button class="delete-btn" onclick="deletePost('${type}', '${p.id}')">삭제</button>`;
-                }
-
-                div.innerHTML = `
-                    <div class="post-header-wrap">
-                        <div class="post-title">${p.title}</div>
-                        ${deleteBtnHtml}
-                    </div>
-                    <div class="post-content">${p.content}</div>
-                    <div class="post-meta">
-                        <span class="post-author" style="color:#007bff; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span>
-                        <span class="post-date">${p.date}</span>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        async function submitPost(type) {
-            if(!currentUser) { alert('로그인을 진행한 뒤 게시글 작성이 가능합니다.'); return; }
-
-            const title = document.getElementById(type + '-title').value.trim();
-            const content = document.getElementById(type + '-content').value.trim();
-            if (!title || !content) { alert('내용 항목을 전부 구성해 주세요.'); return; }
-            
-            const now = new Date();
-            const date = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            
-            try {
-                const newPostRef = doc(collection(db, "posts_" + type));
-                await setDoc(newPostRef, {
-                    title, content, date,
-                    authorId: currentUser.id,
-                    authorNickname: currentUser.nickname,
-                    authorRole: currentUser.role
-                });
-                document.getElementById(type + '-title').value = '';
-                document.getElementById(type + '-content').value = '';
-            } catch(e) { alert('서버 포스팅 등록 오류: ' + e.message); }
-        }
-
-        async function deletePost(type, docId) {
-            if(!confirm("본 게시글을 삭제 처리하시겠습니까?")) return;
-            try { await deleteDoc(doc(db, "posts_" + type, docId)); } catch(e) { alert('게시물 제거 실패: ' + e.message); }
+            }
+            updateAuthUI();
         }
 
         // ==========================================
-        // UI 유틸 컴포넌트 핸들러
+        // 기본 컴포넌트 렌더 및 구조
         // ==========================================
-        function showTab(tabName, el) {
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            const targetSection = document.getElementById('tab-' + tabName);
-            if(targetSection) targetSection.classList.add('active');
-            if (el) el.classList.add('active');
-        }
-
-        function showComm(name, el) {
-            document.querySelectorAll('.comm-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.comm-tab').forEach(t => t.classList.remove('active'));
-            const targetComm = document.getElementById('comm-' + name);
-            if(targetComm) targetComm.classList.add('active');
-            if (el) el.classList.add('active');
-        }
-
-        function toggleTheme() {
-            document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-        }
-        function adjustFont(val) {
-            document.body.style.fontSize = val + 'px';
-            const fv = document.getElementById('font-val');
-            if(fv) fv.innerText = val;
-        }
-        function adjustWidth(val) {
-            const ca = document.querySelector('.content-area');
-            if(ca) ca.style.maxWidth = val + 'px';
-            const wv = document.getElementById('width-val');
-            if(wv) wv.innerText = val;
-        }
-
         const logoData = [
             { src: "JEJU AIR.png", alt: "제주항공" },
             { src: "EASTAR JET.png", alt: "이스타항공" },
@@ -959,6 +808,158 @@
             });
         });
 
+        function showTab(tabName, el) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            if (el) el.classList.add('active');
+        }
+
+        function showComm(name, el) {
+            document.querySelectorAll('.comm-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.comm-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('comm-' + name).classList.add('active');
+            el.classList.add('active');
+        }
+
+        function startApp() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+            updateAuthUI();
+        }
+        
+        function toggleTheme() {
+            document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        }
+        function adjustFont(val) {
+            document.body.style.fontSize = val + 'px';
+            document.getElementById('font-val').innerText = val;
+        }
+        function adjustWidth(val) {
+            document.querySelector('.content-area').style.maxWidth = val + 'px';
+            document.getElementById('width-val').innerText = val;
+        }
+
+        // ==========================================
+        // 게시판 처리
+        // ==========================================
+        let notices = JSON.parse(localStorage.getItem('notices') || '[]');
+        
+        function renderNotices() {
+            const list = document.getElementById('notice-list');
+            const empty = document.getElementById('notice-empty');
+            list.querySelectorAll('li:not(.notice-empty)').forEach(e => e.remove());
+            
+            if (notices.length === 0) { empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+            
+            notices.slice().reverse().forEach((n, index) => {
+                const li = document.createElement('li');
+                let deleteBtnHtml = '';
+                if (currentUser && (currentUser.role === '학술부장' || (n.authorId && n.authorId === currentUser.id))) {
+                    deleteBtnHtml = `<button class="delete-btn" onclick="deleteNotice(${notices.length - 1 - index})">삭제</button>`;
+                }
+                li.innerHTML = `<span class="notice-title">📌 ${n.title}</span><span class="notice-date">${n.date} ${deleteBtnHtml}</span>`;
+                list.appendChild(li);
+            });
+        }
+
+        function deleteNotice(index) {
+            if(!confirm("해당 공지를 삭제하시겠습니까?")) return;
+            notices.splice(index, 1);
+            localStorage.setItem('notices', JSON.stringify(notices));
+            renderNotices();
+        }
+
+        function openNoticeModal() { document.getElementById('notice-modal').classList.add('open'); }
+        function closeNoticeModal() {
+            document.getElementById('notice-modal').classList.remove('open');
+            document.getElementById('notice-title-input').value = '';
+            document.getElementById('notice-content-input').value = '';
+        }
+        function submitNotice() {
+            const title = document.getElementById('notice-title-input').value.trim();
+            const content = document.getElementById('notice-content-input').value.trim();
+            if (!title) { alert('제목을 입력하세요.'); return; }
+            
+            const now = new Date();
+            const date = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+            
+            notices.push({ title, content, date, authorId: currentUser.id });
+            localStorage.setItem('notices', JSON.stringify(notices));
+            renderNotices();
+            closeNoticeModal();
+        }
+
+        function renderPosts(type) {
+            const list = document.getElementById(type + '-list');
+            const empty = document.getElementById(type + '-empty');
+            list.querySelectorAll('.post-item').forEach(e => e.remove());
+            
+            if (posts[type].length === 0) { empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+            
+            posts[type].slice().reverse().forEach((p, index) => {
+                const div = document.createElement('div');
+                div.className = 'post-item';
+                
+                let deleteBtnHtml = '';
+                if (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) {
+                    const realIndex = posts[type].length - 1 - index;
+                    deleteBtnHtml = `<button class="delete-btn" onclick="deletePost('${type}', ${realIndex})">삭제</button>`;
+                }
+
+                div.innerHTML = `
+                    <div class="post-header-wrap">
+                        <div class="post-title">${p.title}</div>
+                        ${deleteBtnHtml}
+                    </div>
+                    <div class="post-content">${p.content}</div>
+                    <div class="post-meta">
+                        <span class="post-author" style="color:#007bff; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span>
+                        <span class="post-date">${p.date}</span>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function submitPost(type) {
+            if(!currentUser) { alert('로그인을 먼저 해주세요.'); return; }
+
+            const myPerm = rolePerms[currentUser.role] || { board: false };
+            if(!myPerm.board) { alert('게시글 작성 권한이 없습니다.'); return; }
+
+            const title = document.getElementById(type + '-title').value.trim();
+            const content = document.getElementById(type + '-content').value.trim();
+            if (!title || !content) { alert('내용을 입력하세요.'); return; }
+            
+            const now = new Date();
+            const date = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            
+            posts[type].push({ 
+                title, content, date,
+                authorId: currentUser.id,
+                authorNickname: currentUser.nickname,
+                authorRole: currentUser.role
+            });
+            
+            localStorage.setItem('posts_' + type, JSON.stringify(posts[type]));
+            document.getElementById(type + '-title').value = '';
+            document.getElementById(type + '-content').value = '';
+            renderPosts(type);
+        }
+
+        function deletePost(type, index) {
+            if(!confirm("이 게시글을 삭제하시겠습니까?")) return;
+            posts[type].splice(index, 1);
+            localStorage.setItem('posts_' + type, JSON.stringify(posts[type]));
+            renderPosts(type);
+        }
+
+        // ==========================================
+        // 기출문제 
+        // ==========================================
         const airlineData = {
             "제주항공": ["2016년 1차", "2017년 1차", "2017년 2차", "2017년 3차", "2018년 1차", "2018년 2차", "2025년 1차"],
             "이스타항공": ["2016년 1차"],
@@ -970,30 +971,16 @@
             "에어서울": ["연도 불명"]
         };
         const airlineSelect = document.getElementById('airline-select');
-        if(airlineSelect) {
-            Object.keys(airlineData).forEach(k => {
-                const o = document.createElement('option');
-                o.value = k; o.innerText = k;
-                airlineSelect.appendChild(o);
-            });
-        }
+        Object.keys(airlineData).forEach(k => {
+            const o = document.createElement('option');
+            o.value = k; o.innerText = k;
+            airlineSelect.appendChild(o);
+        });
         function updateYearOptions() {
-            if(!airlineSelect) return;
             const airline = airlineSelect.value;
-            const ys = document.getElementById('year-select');
-            if(ys) ys.innerHTML = airlineData[airline].map(y => `<option>${y}</option>`).join('');
+            document.getElementById('year-select').innerHTML = airlineData[airline].map(y => `<option>${y}</option>`).join('');
         }
-        if(airlineSelect) updateYearOptions();
-
-        function openNoticeModal() { const m = document.getElementById('notice-modal'); if(m) m.classList.add('open'); }
-        function closeNoticeModal() {
-            const m = document.getElementById('notice-modal');
-            if(m) m.classList.remove('open');
-            const ti = document.getElementById('notice-title-input');
-            const ci = document.getElementById('notice-content-input');
-            if(ti) ti.value = '';
-            if(ci) ci.value = '';
-        }
+        updateYearOptions();
     </script>
 </body>
 </html>
