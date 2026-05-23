@@ -10,7 +10,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; transition: 0.3s; }
 
-        /* 인트로 화면 */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -25,7 +24,6 @@
         #logo-btn:hover { transform: scale(1.03); }
         .intro-hint { font-weight: bold; font-size: 1.2em; margin-top: 16px; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.9); }
 
-        /* 마퀴 (항공사 로고 움직이는 효과) */
         .marquee-container { width: 100%; overflow: hidden; padding: 14px 0; background: rgba(0,0,0,0.45); line-height: 0; }
         .marquee-container.intro-marquee { position: absolute; bottom: 0; }
         .marquee-container.home-marquee { background: rgba(0,0,0,0.08); margin-top: 20px; border-radius: 12px; }
@@ -34,10 +32,8 @@
         .marquee-track img { height: 60px; object-fit: contain; display: block; margin: 0; padding: 0; flex-shrink: 0; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
 
-        /* 메인 화면 */
         #main-content { display: none; flex-direction: column; min-height: 100vh; }
 
-        /* 헤더 */
         .top-header { width: 100%; background: var(--header-bg); box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
         .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; gap: 12px; flex-wrap: wrap;}
         .header-left-group { display: flex; align-items: center; gap: 10px; }
@@ -59,13 +55,11 @@
         .profile-nav-btn { color: #007bff; border: 2px solid #007bff; border-radius: 20px; padding: 6px 14px; margin-left: 5px; border-bottom: 2px solid #007bff !important;}
         .profile-nav-btn:hover { background: #007bff; color: white; }
         
-        /* 알림 종모양 버튼 */
         .noti-nav-btn { position: relative; background: none; border: none; cursor: pointer; margin-left: 10px; padding: 6px; border-bottom:none !important; display: flex; align-items: center; justify-content: center; }
         .noti-nav-btn svg { width: 22px; height: 22px; stroke: var(--text-color); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: 0.2s; }
         .noti-nav-btn:hover svg { transform: scale(1.1); stroke: #007bff; }
         .noti-badge { position: absolute; top: 0px; right: -2px; background: #e74c3c; color: white; font-size: 0.65em; font-weight: bold; padding: 2px 6px; border-radius: 12px; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transform: translate(20%, -10%); }
 
-        /* 버튼류 */
         .primary-btn { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: bold; transition: 0.2s; }
         .primary-btn:hover { background: #0056b3; }
         .admin-btn { padding: 6px 14px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.82em; font-weight: bold; display: none; }
@@ -74,15 +68,14 @@
         .edit-nick-btn { font-size: 0.5em; padding: 4px 8px; border: 1px solid #007bff; background: transparent; color: #007bff; border-radius: 6px; cursor: pointer; transition: 0.2s; margin-left: 8px; vertical-align: middle; }
         .edit-nick-btn:hover { background: #007bff; color: white; }
 
-        /* 콘텐츠 */
         .content-area { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 30px 20px; }
         .page-section { display: none; }
         .page-section.active { display: block; }
         .card { background: var(--card-bg); padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 20px; }
         .section-title { font-size: 1.2em; font-weight: bold; color: #007bff; border-left: 4px solid #007bff; padding-left: 12px; margin-bottom: 16px; }
 
-        /* HOME */
         .home-container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
         .notice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .notice-list { list-style: none; min-height: 48px; display: flex; align-items: center; flex-direction: column; width: 100%;}
         .notice-list li { width: 100%; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.95em; animation: fadeIn 0.5s; }
@@ -98,7 +91,6 @@
 
         .intro-text { line-height: 2; font-size: 1em; color: var(--text-color); word-break: keep-all; margin-top: 10px; }
 
-        /* EXAM RESOURCES */
         .exam-layout { display: flex; gap: 20px; align-items: flex-start; }
         .exam-main { flex: 1; display: flex; flex-direction: column; gap: 16px; position: relative; }
         .exam-sidebar { width: 220px; background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); flex-shrink: 0; position: sticky; top: 90px; }
@@ -111,7 +103,6 @@
         .back-cat-btn:hover { text-decoration: underline; }
         .write-float-btn { align-self: flex-end; margin-top: 10px; }
 
-        /* CREATE SESSION */
         .session-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
         .session-selects { flex: 1; }
         .session-selects label { display: block; margin-bottom: 6px; }
@@ -124,12 +115,10 @@
         .settings-panel input[type=range] { width: 100%; }
         .btn { width: 100%; padding: 12px; margin-top: 6px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; font-size: 1em; }
 
-        /* BOOKS */
         .books-open-btn { display: block; width: 100%; padding: 14px; margin-bottom: 20px; background: #007bff; color: white; border: none; border-radius: 10px; font-size: 1em; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; transition: 0.2s; }
         .books-open-btn:hover { background: #0056b3; }
         .books-embed { width: 100%; height: 500px; border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
-        /* COMMUNITY & POSTS */
         .community-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
         .comm-tab { flex: 1; padding: 12px; text-align: center; font-weight: bold; font-size: 0.95em; background: var(--card-bg); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; color: var(--text-color); transition: 0.2s; }
         .comm-tab.active { border-color: #007bff; color: #007bff; background: var(--card-bg); }
@@ -603,6 +592,13 @@
             <h3>📢 공지사항 작성</h3>
             <input type="text" id="notice-title-input" placeholder="공지 제목">
             <textarea id="notice-content-input" placeholder="공지 내용" style="height:120px;"></textarea>
+            
+            <div style="display:flex; align-items:center; gap:10px; border: 1px solid var(--border); padding: 10px; border-radius: 8px; background: var(--bg-color);">
+                <label style="font-size:0.85em; font-weight:bold; white-space:nowrap; color: var(--text-color);">종료일 (선택)</label>
+                <input type="date" id="notice-end-date" style="padding:6px; border:1px solid var(--border); border-radius:4px; flex:1;">
+                <span style="font-size:0.75em; color:#888; white-space:nowrap;">이후 자동 숨김</span>
+            </div>
+
             <div class="modal-btns">
                 <button class="cancel-btn" onclick="closeNoticeModal()">취소</button>
                 <button class="confirm-btn" onclick="submitNotice()">등록</button>
@@ -615,7 +611,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-        // Firebase 설정 
         const firebaseConfig = {
             apiKey: "AIzaSyCQiE3QCEAo7p-wXQkatXQKMhaiXHcMEmI",
             authDomain: "cdu-haksul.firebaseapp.com",
@@ -628,17 +623,15 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        window.firebaseDb = db;
-
-        // 하나의 문서를 거대한 JSON 덩어리처럼 사용해서 모든 클라이언트 동기화
+        
+        // 중앙 데이터베이스 문서
         const mainDocRef = doc(db, "cdu_database", "main_storage");
 
-        // 🟢 Firebase -> 내 브라우저 (실시간 수신)
+        // Firebase -> 내 브라우저 실시간 수신
         onSnapshot(mainDocRef, (snap) => {
             if (snap.exists()) {
                 const data = snap.data();
                 
-                // 전역 변수들에 Firebase 데이터 덮어쓰기
                 window.rolePerms = data.rolePerms || window.rolePerms;
                 window.usersDB = data.usersDB || [];
                 window.posts = data.posts || { qna: [], suggest: [] };
@@ -646,12 +639,11 @@
                 window.notices = data.notices || [];
                 window.notifications = data.notifications || [];
 
-                // 내 로그인 세션 실시간 갱신 (강제탈퇴 확인 등)
                 if (window.currentUser) {
                     const freshUser = window.usersDB.find(u => u.id === window.currentUser.id);
                     if (freshUser) {
                         if (freshUser.status === 'kicked') {
-                            alert(`[강제 탈퇴 안내]\n관리자에 의해 학술부에서 강제 탈퇴 처리되었습니다.\n사유: ${freshUser.kickReason}\n\n자동으로 로그아웃됩니다.`);
+                            alert(`[강제 탈퇴 안내]\n관리자에 의해 강제 탈퇴 처리되었습니다.\n사유: ${freshUser.kickReason}\n\n자동으로 로그아웃됩니다.`);
                             window.currentUser = null;
                             sessionStorage.removeItem('currentUser');
                         } else {
@@ -659,23 +651,18 @@
                             sessionStorage.setItem('currentUser', JSON.stringify(window.currentUser));
                         }
                     } else {
-                        // 계정이 아예 삭제된 경우
                         window.currentUser = null;
                         sessionStorage.removeItem('currentUser');
                     }
                 }
                 
-                // 화면 새로고침 (다른 사람이 쓴 글이 내 화면에 즉시 뜸!)
                 if(typeof window.updateAuthUI === 'function') window.updateAuthUI();
-
             } else {
-                // DB가 비어있으면 초기값(학술부장 백도어 등)을 최초로 서버에 올림
                 if(typeof window.syncDB === 'function') window.syncDB();
             }
         });
 
-        // 🟢 내 브라우저 -> Firebase (실시간 전송)
-        // 기존에 localStorage.setItem()을 하던 모든 코드는 이제 이 함수를 통해 Firebase로 올라갑니다.
+        // 내 브라우저 -> Firebase 실시간 쓰기
         window.syncDB = function() {
             setDoc(mainDocRef, {
                 rolePerms: window.rolePerms,
@@ -686,13 +673,11 @@
                 notifications: window.notifications
             }, { merge: true }).catch(err => {
                 console.error("Firebase 동기화 실패:", err);
-                alert("서버 연결에 문제가 발생했습니다. 인터넷을 확인해주세요.");
             });
         };
     </script>
 
     <script>
-        // 전역 변수 선언
         var AVAILABLE_ROLES = ['학생', '학술부 조장', '학술부 차장', '학술부장', '교수'];
         
         var rolePerms = {
@@ -705,12 +690,17 @@
         var tempRolePerms = JSON.parse(JSON.stringify(rolePerms));
         var tempUserRoles = {}; 
 
-        var usersDB = []; 
+        var usersDB = [
+            { id: '21181016', password: 'woojin0710!', name: '신우진', nickname: '최고관리자', role: '학술부장', status: 'approved' }
+        ];
+
         var notifications = [];
         var currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
         var posts = { qna: [], suggest: [] };
         var examPosts = [];
         var notices = [];
+
+        var syncDB = function() { console.log("Firebase 연동 대기중..."); };
 
         // 마퀴 (움직이는 로고) 설정
         document.addEventListener('DOMContentLoaded', () => {
@@ -736,7 +726,6 @@
             fillTrack(trackIntro); fillTrack(trackHome);
         });
 
-        // UI 갱신 (Firebase 데이터 도착 시 호출됨)
         function updateAuthUI() {
             const navAuthBtn = document.getElementById('nav-auth-btn');
             const navProfileBtn = document.getElementById('nav-profile-btn');
@@ -799,7 +788,7 @@
             if(document.getElementById('tab-exam').classList.contains('active')) renderExams(currentExamFilter);
         }
 
-        // 인증 
+        // 로그인 가입
         function openAuthModal() { document.getElementById('auth-modal').classList.add('open'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.remove('open'); }
         function switchAuthTab(type) {
@@ -820,18 +809,15 @@
 
             if(!id || !pw || !pwConf || !name || !nick) { alert('모든 항목을 채워주세요.'); return; }
             if(pw !== pwConf) { alert('비밀번호가 일치하지 않습니다.'); return; }
-            if(usersDB.find(u => u.id === id)) { alert('이미 가입된 학번입니다.'); return; }
+            if(usersDB.find(u => u.id === id)) { alert('이미 등록된 학번입니다.'); return; }
 
-            // 학술부장 백도어 계정
             let assignRole = '학생', assignStatus = 'pending';
             if (id === '21181016') { assignRole = '학술부장'; assignStatus = 'approved'; }
 
             usersDB.push({ id, password: pw, name, nickname: nick, role: assignRole, status: assignStatus });
-            
-            // Firebase로 전송
             window.syncDB();
             
-            if(id === '21181016') alert('최고 관리자 계정이 생성되었습니다. 로그인을 진행해주세요.');
+            if(id === '21181016') alert('최고 관리자 계정이 생성되었습니다. 로그인 해주세요.');
             else alert('가입 신청 완료. 관리자 승인 후 로그인 가능합니다.');
 
             ['signup-id','signup-pw','signup-pw-confirm','signup-name','signup-nick'].forEach(eid => document.getElementById(eid).value = '');
@@ -864,7 +850,6 @@
             if(newNick && newNick.trim() !== "") {
                 const trimmed = newNick.trim();
                 currentUser.nickname = trimmed; sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
                 const uIdx = usersDB.findIndex(u => u.id === currentUser.id);
                 if(uIdx > -1) usersDB[uIdx].nickname = trimmed;
                 
@@ -953,7 +938,7 @@
             ['noti-send-title','noti-send-msg'].forEach(id => document.getElementById(id).value='');
         }
 
-        // 백오피스 설정
+        // 백오피스
         function renderAdminRoleSettings() {
             const wrapper = document.getElementById('admin-permission-settings');
             wrapper.innerHTML = '';
@@ -1051,57 +1036,85 @@
             window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
         }
 
-        // 공지 롤링
+        // 공지 롤링 (기간 만료 처리 포함)
         let noticeIndex = 0; let noticeInterval = null;
+
         function renderNotices() {
             const display = document.getElementById('home-notice-display');
             const listEl = document.getElementById('notice-list');
             
+            // 날짜 비교 로직 (yyyy-mm-dd)
+            const t = new Date();
+            const today = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+
             if (notices.length === 0) {
                 listEl.style.display = 'none'; display.style.display = 'block';
                 display.innerHTML = '<span class="notice-empty">등록된 공지사항이 없습니다.</span>';
                 if(noticeInterval) clearInterval(noticeInterval); return;
             }
 
+            // 학술부장 시점 (롤링 없이 전부 노출)
             listEl.innerHTML = '';
             notices.slice().reverse().forEach((n, idx) => {
                 const realIndex = notices.length - 1 - idx;
+                const isExpired = n.endDate && today > n.endDate;
+                
+                let expireTag = isExpired ? `<span style="color:#dc3545; font-weight:bold; margin-right:5px;">[만료]</span>` : '';
+                let endDisp = n.endDate ? `<span style="font-size:0.8em; color:#e74c3c; margin-left:8px;">(~${n.endDate})</span>` : '';
                 let btn = (currentUser && (currentUser.role === '학술부장' || n.authorId === currentUser.id)) ? `<button class="delete-btn" onclick="deleteNotice(${realIndex})">삭제</button>` : '';
-                listEl.innerHTML += `<li><span class="notice-title">📌 ${n.title}</span><span class="notice-date">${n.date} ${btn}</span></li>`;
+                
+                listEl.innerHTML += `<li><span class="notice-title">${expireTag}📌 ${n.title} ${endDisp}</span><span class="notice-date">${n.date} ${btn}</span></li>`;
             });
 
             if (currentUser && currentUser.role === '학술부장') {
                 listEl.style.display = 'block'; display.style.display = 'none';
                 if(noticeInterval) clearInterval(noticeInterval);
             } else {
+                // 일반 유저 시점 (롤링 진행, 만료된 공지는 필터링)
                 listEl.style.display = 'none'; display.style.display = 'block';
-                if (notices.length === 1) {
-                    display.innerHTML = `<li style="animation:none; display:flex; justify-content:space-between; width:100%;"><span class="notice-title">📌 ${notices[0].title}</span><span class="notice-date">${notices[0].date}</span></li>`;
+                
+                const activeNotices = notices.filter(n => !(n.endDate && today > n.endDate));
+
+                if (activeNotices.length === 0) {
+                    display.innerHTML = '<span class="notice-empty">등록된 진행중인 공지사항이 없습니다.</span>';
+                    if(noticeInterval) clearInterval(noticeInterval); return;
+                }
+
+                if (activeNotices.length === 1) {
+                    display.innerHTML = `<li style="animation:none; display:flex; justify-content:space-between; width:100%;"><span class="notice-title">📌 ${activeNotices[0].title}</span><span class="notice-date">${activeNotices[0].date}</span></li>`;
                     if(noticeInterval) clearInterval(noticeInterval); return;
                 }
                 
                 if(noticeInterval) clearInterval(noticeInterval);
                 const showCurrentNotice = () => {
-                    const n = notices[notices.length - 1 - noticeIndex];
+                    const n = activeNotices[activeNotices.length - 1 - noticeIndex];
                     display.innerHTML = `<li style="animation:fadeIn 0.5s; display:flex; justify-content:space-between; width:100%;"><span class="notice-title">📌 ${n.title}</span><span class="notice-date">${n.date}</span></li>`;
                 };
                 showCurrentNotice();
-                noticeInterval = setInterval(() => { noticeIndex = (noticeIndex + 1) % notices.length; showCurrentNotice(); }, 5000);
+                noticeInterval = setInterval(() => { noticeIndex = (noticeIndex + 1) % activeNotices.length; showCurrentNotice(); }, 5000);
             }
         }
 
         function deleteNotice(idx) { if(confirm("삭제하시겠습니까?")) { notices.splice(idx, 1); window.syncDB(); renderNotices(); } }
         function openNoticeModal() { document.getElementById('notice-modal').classList.add('open'); }
-        function closeNoticeModal() { document.getElementById('notice-modal').classList.remove('open'); document.getElementById('notice-title-input').value=''; document.getElementById('notice-content-input').value=''; }
+        function closeNoticeModal() { 
+            document.getElementById('notice-modal').classList.remove('open'); 
+            document.getElementById('notice-title-input').value=''; 
+            document.getElementById('notice-content-input').value=''; 
+            document.getElementById('notice-end-date').value='';
+        }
 
         function submitNotice() {
             const title = document.getElementById('notice-title-input').value.trim();
             const content = document.getElementById('notice-content-input').value.trim();
+            const endDate = document.getElementById('notice-end-date').value; // 기간설정 데이터
             if (!title) { alert('제목을 입력하세요.'); return; }
             
             const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')}`;
-            notices.push({ title, content, date, authorId: currentUser.id });
+            
+            notices.push({ title, content, date, endDate, authorId: currentUser.id });
             notifications.push({ id: 'noti_sys_' + new Date().getTime(), title: "새로운 공지사항 등록", msg: title, target: 'all', date, readBy: [] });
+            
             window.syncDB(); renderNotices(); closeNoticeModal(); updateNotiBadge();
         }
 
@@ -1282,6 +1295,7 @@
         function adjustFont(val) { document.body.style.fontSize = val + 'px'; }
         function adjustWidth(val) { document.querySelector('.content-area').style.maxWidth = val + 'px'; }
 
+        // CREATE SESSION 항공사 옵션
         const airlineData = { "제주항공": ["2016년 1차","2017년 1차","2017년 2차","2017년 3차","2018년 1차","2018년 2차","2025년 1차"], "이스타항공": ["2016년 1차"], "대한항공": ["연도 불명","2025년 1차","2025년 2차"], "티웨이항공": ["2015년 1차","2015년 2차","2017년 1차","2017년 2차","2018년 1차","2018년 2차","2024년 1차","연도 불명"], "에어인천": ["2024년 2차","연도 불명"], "진에어": ["2025년 1차"], "아시아나항공": ["2018년 1차"], "에어서울": ["연도 불명"] };
         const airlineSelect = document.getElementById('airline-select');
         Object.keys(airlineData).forEach(k => { const o = document.createElement('option'); o.value = k; o.innerText = k; airlineSelect.appendChild(o); });
