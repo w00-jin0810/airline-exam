@@ -112,26 +112,14 @@
         .org-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .team-box { background: var(--bg-color); border: 1px solid var(--border); border-radius: 8px; padding: 15px; text-align: center; }
 
-        /* --- EXAM RESOURCES --- */
-        .exam-layout { display: flex; gap: 20px; align-items: flex-start; justify-content: center; }
-        .exam-main { flex: 1; display: flex; flex-direction: column; gap: 16px; position: relative; max-width: 900px;}
-        .exam-sidebar { width: 220px; background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); flex-shrink: 0; position: sticky; top: 90px; }
-        .exam-cat-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .exam-cat-btn { width: 100%; text-align: left; padding: 10px 14px; border: none; background: transparent; color: var(--text-color); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .exam-cat-btn:hover { background: rgba(0,123,255,0.1); color: #007bff; }
-        .exam-cat-btn.active { background: #007bff; color: white; }
-        .back-cat-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; color: #007bff; font-weight: bold; cursor: pointer; font-size: 0.9em; margin-bottom: 10px; padding: 0; }
-        .back-cat-btn:hover { text-decoration: underline; }
-        .write-float-btn { align-self: flex-end; margin-top: 10px; }
-
-        /* --- CREATE SESSION (CBT) 중앙 정렬 --- */
+        /* --- CREATE SESSION (CBT) --- */
         .cbt-container { display: flex; gap: 20px; align-items: flex-start; justify-content: center; max-width: 1000px; margin: 0 auto; }
         .cbt-main { flex: 1; min-width: 0;}
         .cbt-sidebar { width: 260px; background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); flex-shrink: 0; position: sticky; top: 90px; display: flex; flex-direction: column; gap: 10px;}
         
         .cbt-tabs { display: flex; gap: 5px; border-bottom: 2px solid var(--border); margin-bottom: 15px;}
         .cbt-tab { flex: 1; padding: 10px; border: none; background: transparent; font-weight: bold; color: var(--text-color); cursor: pointer; }
-        .cbt-tab.active { color: #007bff; border-bottom: 3px solid #007bff; margin-bottom: -2px;}
+        .cbt-tab.active { color: var(--accent); border-bottom: 3px solid var(--accent); margin-bottom: -2px;}
         select.cbt-dropdown, input.cbt-input { padding: 10px; width: 100%; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-color); font-family: inherit;}
         .btn-cbt { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; font-size: 1em; transition: 0.2s;}
 
@@ -144,7 +132,7 @@
         
         .exam-options { display: flex; flex-direction: column; gap: 10px; }
         .exam-opt-btn { text-align: left; padding: 12px 20px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 1em; transition: 0.2s; color: var(--text-color); }
-        .exam-opt-btn:hover { background: rgba(0,123,255,0.1); border-color: #007bff; }
+        .exam-opt-btn:hover { background: rgba(0,123,255,0.1); border-color: var(--accent); }
         .exam-opt-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; font-weight: bold;}
         .exam-opt-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; text-decoration: line-through; }
         .exam-opt-btn.selected { background: #e2e6ea; border-color: #6c757d; font-weight: bold; box-shadow: inset 0 0 0 2px #6c757d; }
@@ -153,21 +141,33 @@
         :root[data-theme="dark"] .exam-explanation { background: #332701; color: #ffda6a; }
         .exam-nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);}
 
+        /* --- EXAM RESOURCES --- */
+        .exam-layout { display: flex; gap: 20px; align-items: flex-start; justify-content: center; }
+        .exam-main { flex: 1; display: flex; flex-direction: column; gap: 16px; position: relative; max-width: 900px;}
+        .exam-sidebar { width: 220px; background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); flex-shrink: 0; position: sticky; top: 90px; }
+        .exam-cat-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .exam-cat-btn { width: 100%; text-align: left; padding: 10px 14px; border: none; background: transparent; color: var(--text-color); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.95em; }
+        .exam-cat-btn:hover { background: rgba(0,123,255,0.1); color: var(--accent); }
+        .exam-cat-btn.active { background: var(--accent); color: white; }
+        .back-cat-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; color: var(--accent); font-weight: bold; cursor: pointer; font-size: 0.9em; margin-bottom: 10px; padding: 0; }
+        .back-cat-btn:hover { text-decoration: underline; }
+        .write-float-btn { align-self: flex-end; margin-top: 10px; }
+
         /* --- 기타 탭 --- */
-        .books-open-btn { display: block; width: 100%; padding: 14px; margin-bottom: 20px; background: #007bff; color: white; border: none; border-radius: 10px; font-size: 1em; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; transition: 0.2s; }
-        .books-open-btn:hover { background: #0056b3; }
+        .books-open-btn { display: block; width: 100%; padding: 14px; margin-bottom: 20px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 1em; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; transition: 0.2s; }
+        .books-open-btn:hover { filter: brightness(1.1); }
         .books-embed { width: 100%; height: 500px; border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
         .community-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
         .comm-tab { flex: 1; padding: 12px; text-align: center; font-weight: bold; font-size: 0.95em; background: var(--card-bg); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; color: var(--text-color); transition: 0.2s; }
-        .comm-tab.active { border-color: #007bff; color: #007bff; background: var(--card-bg); }
+        .comm-tab.active { border-color: var(--accent); color: var(--accent); background: var(--card-bg); }
         .comm-section { display: none; }
         .comm-section.active { display: block; }
 
         .write-form { display: none; flex-direction: column; gap: 12px; margin-bottom: 24px; }
         .write-form input[type=text], .write-form textarea { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: 'Malgun Gothic', sans-serif; font-size: 0.95em; width: 100%; }
         .write-form textarea { height: 100px; resize: vertical; }
-        .write-form input:focus, .write-form textarea:focus { outline: none; border-color: #007bff; }
+        .write-form input:focus, .write-form textarea:focus { outline: none; border-color: var(--accent); }
 
         .post-list { display: flex; flex-direction: column; gap: 12px; }
         .post-item { background: var(--bg-color); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
@@ -179,10 +179,9 @@
         
         .reply-box { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); padding-left: 15px; border-left: 3px solid #ddd; }
         .reply-item { margin-bottom: 8px; font-size: 0.85em; line-height:1.4;}
-        .reply-item .reply-author { font-weight: bold; color: #007bff; }
+        .reply-item .reply-author { font-weight: bold; color: var(--accent); }
         .reply-input-wrapper { display: flex; gap: 8px; margin-top: 8px; }
         .reply-input-wrapper input { flex: 1; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-color);}
-
         .post-empty { color: #aaa; text-align: center; padding: 30px 0; font-size: 0.95em; }
 
         /* --- 모달 공통 --- */
@@ -225,6 +224,8 @@
         .noti-item.unread { border-left: 4px solid #dc3545; background: #fff5f5; cursor: pointer; }
         .noti-item.unread:hover { opacity: 0.9; }
         :root[data-theme="dark"] .noti-item.unread { background: #2c1a1a; border-left-color:#ef4444;}
+
+        .hidden { display: none !important; }
 
         /* 반응형 */
         @media (max-width: 900px) {
@@ -298,12 +299,12 @@
         <main class="content-area">
             <section id="tab-home" class="page-section active">
                 <div class="home-container">
-                    <div class="card" style="margin-bottom: 0;">
+                    <div class="card" style="margin-bottom: 0; padding-bottom: 15px;">
                         <div class="notice-header">
                             <div class="section-title" style="margin-bottom:0;">📢 홈 화면 공지사항</div>
                             <button class="primary-btn btn-create-notice" style="display:none;" onclick="openNoticeModal('home')">+ 공지 작성</button>
                         </div>
-                        <ul class="notice-list" id="notice-list-full" style="display:none;"></ul>
+                        <ul class="notice-list hidden" id="notice-list-full"></ul>
                         <div class="notice-list" id="home-notice-display" style="min-height: 48px;">
                             <span class="notice-empty">등록된 공지사항이 없습니다.</span>
                         </div>
@@ -333,7 +334,7 @@
                 <div class="card" style="margin-top: 20px;">
                     <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
                         <span>📊 학술부 조직도</span>
-                        <button id="btn-org-edit" class="btn-outline" style="display:none; border-color:var(--accent); color:var(--accent);" onclick="openOrgModal()">⚙️ 조직도 수정</button>
+                        <button id="btn-edit-org" class="btn-outline" style="display:none; border-color:var(--accent); color:var(--accent);" onclick="openOrgModal()">⚙️ 조직도 수정</button>
                     </div>
                     <div id="org-chart-display" class="org-chart-wrapper"></div>
                 </div>
@@ -343,6 +344,10 @@
                 <div class="cbt-container">
                     <div class="cbt-main">
                         <div id="cbt-welcome-card" class="card" style="height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                            <div class="cbt-tabs" style="width: 100%; max-width: 400px; margin-bottom: 30px;">
+                                <button class="cbt-tab active" id="tab-btn-cbt-airline" onclick="switchCbtTab('airline')">선택 학습</button>
+                                <button class="cbt-tab" id="tab-btn-cbt-mock" onclick="switchCbtTab('mock')">랜덤 모의고사</button>
+                            </div>
                             <h2 style="color:var(--accent); font-size:1.8em; margin-bottom:15px;">✈️ CBT 기출문제 학습 시스템</h2>
                             <p style="color:#666; font-size:1em; line-height:1.6;">우측 메뉴에서 원하시는 학습 모드와 항공사를 선택하세요.<br>실전처럼 문제를 풀고 자동으로 오답노트를 생성할 수 있습니다.</p>
                         </div>
@@ -384,11 +389,6 @@
                     </div>
 
                     <div class="cbt-sidebar card" style="margin-bottom:0;">
-                        <div class="cbt-tabs">
-                            <button class="cbt-tab active" id="tab-btn-cbt-airline" onclick="switchCbtTab('airline')">선택 학습</button>
-                            <button class="cbt-tab" id="tab-btn-cbt-mock" onclick="switchCbtTab('mock')">랜덤 모의고사</button>
-                        </div>
-                        
                         <div id="cbt-panel-airline" style="display:flex; flex-direction:column; gap:10px;">
                             <label style="font-weight:bold; font-size:0.9em;">항공사 (초당대 포함):</label>
                             <select id="cbt-sel-airline" class="cbt-dropdown" onchange="updateCbtYears()"></select>
@@ -411,7 +411,7 @@
                         </div>
 
                         <div id="cbt-admin-controls" style="display:none;">
-                            <hr style="border:0; border-top:1px dashed var(--border); margin:10px 0;">
+                            <hr style="border:0; border-top:1px dashed var(--border); margin:20px 0 10px 0;">
                             <button id="btn-cbt-manage" class="btn-cbt" style="background:#17a2b8;" onclick="openCbtManageModal()">⚙️ 문제 관리 (신규 등록)</button>
                         </div>
                     </div>
@@ -898,7 +898,7 @@
 
         var syncDB = function() {}; 
 
-        // 마퀴 설정 (간격 0으로 완벽 밀착 및 반복)
+        // 마퀴 (간격 0으로 완벽 밀착 및 반복)
         document.addEventListener('DOMContentLoaded', () => {
             const logoData = [
                 { src: "JEJU AIR.png", alt: "제주항공" }, { src: "EASTAR JET.png", alt: "이스타항공" }, { src: "KOREAN AIR.png", alt: "대한항공" },
@@ -918,7 +918,7 @@
             });
         });
 
-        // ⚙️ 환경설정
+        // ⚙️ 환경설정 / 조직도
         function openSettingsModal() { 
             const bd = document.body;
             document.getElementById('set-font').value = parseInt(window.getComputedStyle(bd).fontSize) || 16;
@@ -963,9 +963,11 @@
             display.innerHTML = `<div class="org-box"><div class="org-title">담당 교수</div><div class="org-name">${orgChart.prof || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부장</div><div class="org-name" style="color:#007bff;">${orgChart.pres || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부 차장</div><div class="org-name" style="color:#28a745;">${orgChart.vpres || '-'}</div></div><div class="org-grid">${teamsHtml}</div>`;
         }
 
-        // UI 갱신 (권한, 버튼 표시)
+        // --- UI 갱신 (권한, 버튼 표시 수정) ---
         function updateAuthUI() {
-            const isAuth = !!currentUser; const role = isAuth ? currentUser.role : ''; const myPerm = rolePerms[role] || {};
+            const isAuth = !!currentUser; 
+            const role = isAuth ? currentUser.role : ''; 
+            const myPerm = rolePerms[role] || {};
             
             document.getElementById('nav-auth-btn').style.display = isAuth ? 'none' : 'flex';
             document.getElementById('nav-profile-btn').style.display = isAuth ? 'flex' : 'none';
@@ -977,15 +979,22 @@
             document.querySelectorAll('.btn-create-notice').forEach(b => b.style.display = myPerm.notice ? 'inline-block' : 'none');
             document.getElementById('btn-create-exam').style.display = myPerm.exam ? 'inline-block' : 'none'; 
             
-            const btnManage = document.getElementById('btn-cbt-manage'), btnEditList = document.getElementById('btn-cbt-edit-list');
-            if(btnManage) btnManage.style.display = ['학술부장','학술부 차장'].includes(role) ? 'block' : 'none';
-            if(btnEditList) btnEditList.style.display = ['학술부장','학술부 차장'].includes(role) ? 'block' : 'none';
+            const canManageCbt = ['학술부장','학술부 차장'].includes(role);
+            const canOrgEdit = myPerm.orgEdit !== undefined ? myPerm.orgEdit : ['학술부장', '학술부 차장'].includes(role);
+
+            const btnManage = document.getElementById('btn-cbt-manage');
+            const btnEditList = document.getElementById('btn-cbt-edit-list');
+            const cbtAdminControls = document.getElementById('cbt-admin-controls');
+
+            if(btnManage) btnManage.style.display = canManageCbt ? 'block' : 'none';
+            if(btnEditList) btnEditList.style.display = canManageCbt ? 'block' : 'none';
+            if(cbtAdminControls) cbtAdminControls.style.display = canManageCbt ? 'block' : 'none';
 
             document.getElementById('write-form-qna').style.display = myPerm.board ? 'flex' : 'none';
             document.getElementById('write-form-suggest').style.display = myPerm.board ? 'flex' : 'none';
             
             const btnOrg = document.getElementById('btn-edit-org');
-            if(btnOrg) btnOrg.style.display = myPerm.orgEdit ? 'inline-block' : 'none';
+            if(btnOrg) btnOrg.style.display = canOrgEdit ? 'inline-block' : 'none';
 
             if (isAuth) {
                 document.getElementById('profile-user-role').innerText = role; document.getElementById('profile-user-nick').innerText = currentUser.nickname; document.getElementById('profile-user-name').innerText = currentUser.name; document.getElementById('profile-user-id').innerText = currentUser.id;
@@ -997,8 +1006,9 @@
                 document.getElementById('btn-create-exam').style.display = 'none'; 
                 document.getElementById('write-form-qna').style.display = 'none'; 
                 document.getElementById('write-form-suggest').style.display = 'none';
-                if(btnEditOrg) btnEditOrg.style.display = 'none'; 
+                if(btnOrg) btnOrg.style.display = 'none'; 
                 if(document.getElementById('admin-notification-card')) document.getElementById('admin-notification-card').style.display = 'none';
+                if(cbtAdminControls) cbtAdminControls.style.display = 'none';
             }
             renderOrgChart(); renderNotices(); renderPosts('qna'); renderPosts('suggest');
             if(document.getElementById('tab-exam').classList.contains('active')) renderExams(currentExamFilter);
@@ -1131,7 +1141,7 @@
         }
         function renderAdminUserLists() {
             const pBody = document.getElementById('admin-pending-list'); const aBody = document.getElementById('admin-user-list'); const notiChecks = document.getElementById('noti-user-checkboxes');
-            pBody.innerHTML = ''; aBody.innerHTML = ''; if(notiChecks) notiChecks.innerHTML = '';
+            pBody.innerHTML = ''; aBody.innerHTML = ''; if(notiChecks) notiChecks.innerHTML = `<label><input type="checkbox" id="noti-check-all" onchange="toggleAllNoti(this)"> <strong>전체 선택</strong></label><hr style="border:0; border-top:1px dashed #ccc; margin:8px 0;">`;
             usersDB.forEach(u => { if (!u.status) u.status = 'approved'; });
             const pending = usersDB.filter(u => u.status === 'pending'); const approved = usersDB.filter(u => u.status === 'approved');
             if (pending.length === 0) pBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#aaa; padding:20px;">대기 인원 없음</td></tr>';
@@ -1162,7 +1172,8 @@
         }
         function kickUser(userId) {
             const t = usersDB.find(u => u.id === userId); if(!t) return;
-            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴'; window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
+            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴';
+            window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
         }
 
         // 공지 롤링
@@ -1343,8 +1354,8 @@
             showCbtResult(correctCount, currentCbtList.length);
         }
 
-        function quitCbt() {
-            if(!confirm("학습을 종료하시겠습니까?")) return;
+        function finishLearning() {
+            if(!confirm("학습을 종료하고 결과를 확인하시겠습니까?")) return;
             let correctCount = 0; currentCbtList.forEach((q, idx) => { if(userAnswers[idx] === q.answer) correctCount++; });
             showCbtResult(correctCount, currentCbtList.length);
         }
@@ -1471,7 +1482,7 @@
                 const realIndex = posts[type].length - 1 - reverseIdx; const div = document.createElement('div'); div.className = 'post-item'; if(!p.replies) p.replies = [];
                 let delBtn = (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) ? `<button class="delete-btn" onclick="deletePost('${type}', ${realIndex})">삭제</button>` : '';
                 let dTitle = p.title, dContent = p.content, secretUnlocked = !p.isSecret;
-                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 입력 및 확인</button>`; }
+                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 확인</button>`; }
                 div.innerHTML = `
                     <div class="post-header-wrap"><div class="post-title" id="title-${type}-${realIndex}">${dTitle}</div>${delBtn}</div>
                     <div class="post-content" id="content-${type}-${realIndex}">${dContent}</div>
@@ -1601,8 +1612,7 @@
         }
         function kickUser(userId) {
             const t = usersDB.find(u => u.id === userId); if(!t) return;
-            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴';
-            window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
+            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴'; window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
         }
 
     </script>
