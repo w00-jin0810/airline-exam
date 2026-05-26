@@ -186,10 +186,9 @@
 
         /* --- 모달 공통 --- */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; justify-content: center; align-items: center; }
-        .modal-overlay.open { display: flex; }
-        .modal-box { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; position: relative; max-height: 90vh; overflow-y: auto;}
+        .modal-box { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 90%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
         .modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5em; cursor: pointer; color: var(--text-color); background: none; border: none; }
-        .modal-box input:not([type="checkbox"]), .modal-box textarea, .modal-box select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: 'Malgun Gothic', sans-serif; width: 100%; }
+        .modal-box input:not([type="checkbox"]):not([type="file"]), .modal-box textarea, .modal-box select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: 'Malgun Gothic', sans-serif; width: 100%; }
         
         .pw-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         .pw-wrapper input { width: 100%; padding-right: 40px !important; }
@@ -205,7 +204,6 @@
         .auth-tab { flex: 1; padding: 10px; background: none; border: none; color: var(--text-color); font-weight: bold; cursor: pointer; border-bottom: 3px solid transparent; font-size: 1em; transition: 0.2s;}
         .auth-tab.active { border-bottom-color: var(--accent); color: var(--accent); }
         .auth-panel { display: none; flex-direction: column; gap: 12px; }
-        .auth-panel.active { display: flex; }
 
         .profile-badge { display: inline-block; padding: 6px 14px; font-size: 0.9em; font-weight: bold; border-radius: 20px; background: #e3f2fd; color: #0d47a1; margin: 0 auto; }
         :root[data-theme="dark"] .profile-badge { background: #0d47a1; color: #e3f2fd; }
@@ -304,7 +302,7 @@
                             <div class="section-title" style="margin-bottom:0;">📢 홈 화면 공지사항</div>
                             <button class="primary-btn btn-create-notice" style="display:none;" onclick="openNoticeModal('home')">+ 공지 작성</button>
                         </div>
-                        <ul class="notice-list hidden" id="notice-list-full"></ul>
+                        <ul class="notice-list" id="notice-list-full" style="display:none;"></ul>
                         <div class="notice-list" id="home-notice-display" style="min-height: 48px;">
                             <span class="notice-empty">등록된 공지사항이 없습니다.</span>
                         </div>
@@ -389,6 +387,11 @@
                     </div>
 
                     <div class="cbt-sidebar card" style="margin-bottom:0;">
+                        <div class="cbt-tabs">
+                            <button class="cbt-tab active" id="tab-btn-cbt-airline" onclick="switchCbtTab('airline')">선택 학습</button>
+                            <button class="cbt-tab" id="tab-btn-cbt-mock" onclick="switchCbtTab('mock')">랜덤 모의고사</button>
+                        </div>
+                        
                         <div id="cbt-panel-airline" style="display:flex; flex-direction:column; gap:10px;">
                             <label style="font-weight:bold; font-size:0.9em;">항공사 (초당대 포함):</label>
                             <select id="cbt-sel-airline" class="cbt-dropdown" onchange="updateCbtYears()"></select>
@@ -598,7 +601,7 @@
         </main>
     </div>
 
-    <div class="modal-overlay" id="settings-modal">
+    <div class="modal-overlay" id="settings-modal" style="display:none;">
         <div class="modal-box" style="max-width: 300px;">
             <button class="modal-close-btn" onclick="closeSettingsModal()">×</button>
             <h3 style="margin-bottom: 10px; text-align: center;">⚙️ 환경 설정</h3>
@@ -615,7 +618,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="org-edit-modal">
+    <div class="modal-overlay" id="org-edit-modal" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close-btn" onclick="closeOrgModal()">×</button>
             <h3 style="margin-bottom: 10px;">📊 조직도 내용 수정</h3>
@@ -642,7 +645,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="cbt-list-modal">
+    <div class="modal-overlay" id="cbt-list-modal" style="display:none;">
         <div class="modal-box" style="max-width: 700px;">
             <button class="modal-close-btn" onclick="closeCbtListModal()">×</button>
             <h3 style="margin-bottom: 10px; color:#ffc107; text-shadow:1px 1px 1px #888;">📝 현재 차수 등록된 문제 목록</h3>
@@ -651,7 +654,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="cbt-manage-modal">
+    <div class="modal-overlay" id="cbt-manage-modal" style="display:none;">
         <div class="modal-box" style="max-width: 600px;">
             <button class="modal-close-btn" onclick="closeCbtManageModal()">×</button>
             <h3 style="margin-bottom: 15px; color:#17a2b8;">⚙️ CBT 문제 관리 센터</h3>
@@ -696,7 +699,7 @@
     </div>
 
 
-    <div class="modal-overlay" id="msg-modal">
+    <div class="modal-overlay" id="msg-modal" style="display:none;">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeMsgModal()">×</button>
             <h3 style="margin-bottom: 0;">✉️ 쪽지 보내기</h3>
@@ -708,7 +711,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="exam-modal">
+    <div class="modal-overlay" id="exam-modal" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close-btn" onclick="closeExamModal()">×</button>
             <h3>📁 기출자료(게시물) 업로드</h3>
@@ -717,10 +720,13 @@
             </select>
             <input type="text" id="exam-title-input" placeholder="글 제목 (예: 2025년 대한항공 1차 기출)">
             <textarea id="exam-content-input" placeholder="내용 및 기출 복기 작성" style="height:100px;"></textarea>
+            
             <div style="border: 1px solid var(--border); padding: 10px; border-radius: 8px;">
-                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px;">첨부파일 (이름만 텍스트 기록 지원)</label>
-                <input type="file" id="exam-file-input" style="padding:0; border:none; background:transparent;">
+                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px;">첨부파일 등록 (계속해서 추가로 선택 가능합니다)</label>
+                <input type="file" id="exam-file-input" multiple="multiple" style="padding:10px; border:1px solid var(--border); background:var(--bg-color); border-radius:8px; width:100%;" onchange="handleFileSelect(this)">
+                <div id="exam-file-list" style="margin-top:10px; font-size:0.85em; color:var(--accent); font-weight:bold;"></div>
             </div>
+
             <div class="modal-btns">
                 <button class="cancel-btn" onclick="closeExamModal()">취소</button>
                 <button class="confirm-btn" onclick="submitExamPost()">업로드 완료</button>
@@ -728,7 +734,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="auth-modal">
+    <div class="modal-overlay" id="auth-modal" style="display:none;">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeAuthModal()">×</button>
             <div class="auth-tabs">
@@ -736,7 +742,7 @@
                 <button class="auth-tab" id="tab-btn-signup" onclick="switchAuthTab('signup')">회원가입</button>
             </div>
             
-            <div class="auth-panel active" id="panel-login">
+            <div class="auth-panel active" id="panel-login" style="display:flex;">
                 <input type="text" id="login-id" placeholder="학번 (ID)">
                 <div class="pw-wrapper">
                     <input type="password" id="login-pw" placeholder="비밀번호">
@@ -762,7 +768,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="profile-modal">
+    <div class="modal-overlay" id="profile-modal" style="display:none;">
         <div class="modal-box" style="max-width:350px;">
             <button class="modal-close-btn" onclick="closeProfileModal()">×</button>
             <h3 style="text-align: center; margin-bottom: 10px;">내 프로필</h3>
@@ -780,7 +786,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="noti-modal">
+    <div class="modal-overlay" id="noti-modal" style="display:none;">
         <div class="modal-box" style="max-width:400px;">
             <button class="modal-close-btn" onclick="closeNotiModal()">×</button>
             <h3 style="margin-bottom: 10px;">🔔 내 알림</h3>
@@ -789,7 +795,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="notice-modal">
+    <div class="modal-overlay" id="notice-modal" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close-btn" onclick="closeNoticeModal()">×</button>
             <h3>📢 공지사항 작성</h3>
@@ -963,7 +969,7 @@
             display.innerHTML = `<div class="org-box"><div class="org-title">담당 교수</div><div class="org-name">${orgChart.prof || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부장</div><div class="org-name" style="color:#007bff;">${orgChart.pres || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부 차장</div><div class="org-name" style="color:#28a745;">${orgChart.vpres || '-'}</div></div><div class="org-grid">${teamsHtml}</div>`;
         }
 
-        // --- UI 갱신 (권한, 버튼 표시 수정) ---
+        // UI 갱신 (권한, 버튼 표시 수정)
         function updateAuthUI() {
             const isAuth = !!currentUser; 
             const role = isAuth ? currentUser.role : ''; 
@@ -1482,7 +1488,7 @@
                 const realIndex = posts[type].length - 1 - reverseIdx; const div = document.createElement('div'); div.className = 'post-item'; if(!p.replies) p.replies = [];
                 let delBtn = (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) ? `<button class="delete-btn" onclick="deletePost('${type}', ${realIndex})">삭제</button>` : '';
                 let dTitle = p.title, dContent = p.content, secretUnlocked = !p.isSecret;
-                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 확인</button>`; }
+                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 입력 및 확인</button>`; }
                 div.innerHTML = `
                     <div class="post-header-wrap"><div class="post-title" id="title-${type}-${realIndex}">${dTitle}</div>${delBtn}</div>
                     <div class="post-content" id="content-${type}-${realIndex}">${dContent}</div>
@@ -1530,9 +1536,26 @@
         }
         function deletePost(type, idx) { if(confirm("삭제하시겠습니까?")) { posts[type].splice(idx, 1); window.syncDB(); renderPosts(type); } }
 
-        // EXAM RESOURCES (게시판)
+        // ==========================================
+        // 🔥 EXAM RESOURCES (기출자료 게시판) 파일 여러 개 선택(다중 파일 누적)
+        // ==========================================
         let currentExamFilter = '전체';
+        let examAccumulatedFiles = []; // 다중 첨부를 위한 전역 배열 추가
+
+        // ✅ 파일이 선택될 때마다 배열에 누적하는 함수
+        function handleFileSelect(input) {
+            for (let i = 0; i < input.files.length; i++) {
+                if(!examAccumulatedFiles.includes(input.files[i].name)) {
+                    examAccumulatedFiles.push(input.files[i].name);
+                }
+            }
+            // 누적된 파일 리스트 화면 표시
+            document.getElementById('exam-file-list').innerText = "📎 첨부 대기 중: " + examAccumulatedFiles.join(', ');
+            input.value = ''; // 선택 창을 초기화해야 같은 파일 또 선택 가능
+        }
+
         function filterExams(cat, el) { currentExamFilter = cat; document.querySelectorAll('.exam-cat-btn').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); renderExamBoard(cat); }
+        
         function renderExamBoard(cat) {
             document.getElementById('exam-title-text').innerText = `항공사 기출자료실 (${cat})`; const list = document.getElementById('exam-post-list'); list.innerHTML='';
             const filtered = examPosts.filter(e => cat==='전체' || e.airline===cat);
@@ -1540,22 +1563,43 @@
             filtered.slice().reverse().forEach((p) => {
                 const rIdx = examPosts.findIndex(orig => orig.id === p.id); const div = document.createElement('div'); div.className = 'post-item';
                 let delBtn = (currentUser && (p.authorId === currentUser.id || (rolePerms[currentUser.role]||{}).exam)) ? `<button class="delete-btn" onclick="deleteExam(${rIdx})">삭제</button>` : '';
-                let attachHtml = p.fileName ? `<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-radius:8px; font-size:0.85em;">📎 <strong>첨부파일:</strong> ${p.fileName}</div>` : '';
+                let attachHtml = p.fileName ? `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:var(--text-color);">📎 <strong>첨부파일:</strong> ${p.fileName}</div>` : '';
                 div.innerHTML = `<div class="post-header-wrap"><div class="post-title"><span style="color:#007bff; margin-right:6px;">[${p.airline}]</span> ${p.title}</div>${delBtn}</div><div class="post-content">${p.content}${attachHtml}</div><div class="post-meta"><span class="post-author" style="color:#28a745; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span class="post-date">${p.date}</span></div>`;
                 list.appendChild(div);
             });
         }
-        function openExamModal() { document.getElementById('exam-modal').style.display = 'flex'; }
-        function closeExamModal() { document.getElementById('exam-modal').style.display = 'none'; document.getElementById('exam-title-input').value=''; document.getElementById('exam-content-input').value=''; document.getElementById('exam-file-input').value=''; }
+
+        function openExamModal() { 
+            examAccumulatedFiles = []; // 모달 열 때 파일 목록 초기화
+            document.getElementById('exam-file-list').innerText = ''; 
+            document.getElementById('exam-modal').style.display = 'flex'; 
+        }
+
+        function closeExamModal() { 
+            document.getElementById('exam-modal').style.display = 'none'; 
+            document.getElementById('exam-title-input').value=''; 
+            document.getElementById('exam-content-input').value=''; 
+            document.getElementById('exam-file-input').value=''; 
+            examAccumulatedFiles = []; // 닫을 때 초기화
+            document.getElementById('exam-file-list').innerText = '';
+        }
+        
         function submitExamPost() {
             if(!currentUser) return alert('로그인 요망.'); const myPerm = rolePerms[currentUser.role] || {}; if(!myPerm.exam) return alert('업로드 권한이 없습니다.');
-            const airline = document.getElementById('exam-airline-input').value; const title = document.getElementById('exam-title-input').value.trim(); const content = document.getElementById('exam-content-input').value.trim(); const fileInput = document.getElementById('exam-file-input'); const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : '';
+            const airline = document.getElementById('exam-airline-input').value; 
+            const title = document.getElementById('exam-title-input').value.trim(); 
+            const content = document.getElementById('exam-content-input').value.trim(); 
+            
+            // ✅ 누적된 파일명을 문자열로 쉼표로 이어서 저장
+            const fileName = examAccumulatedFiles.join(', ');
+
             if (!title || !content) return alert('제목, 내용 입력 요망.');
             const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
             examPosts.push({ id: 'ep_' + new Date().getTime(), airline, title, content, fileName, date, authorId: currentUser.id, authorNickname: currentUser.nickname, authorRole: currentUser.role });
             if (!['학술부 조장', '학술부 차장', '학술부장'].includes(currentUser.role)) notifications.push({ id: 'noti_sys_' + new Date().getTime(), title: "새로운 기출자료 등록", msg: `[${airline}] ${title}`, target: 'all', date, readBy: [], clearedBy: [] });
             window.syncDB(); closeExamModal(); renderExamBoard(currentExamFilter);
         }
+
         function deleteExam(index) { if(confirm("삭제하시겠습니까?")) { examPosts.splice(index, 1); window.syncDB(); renderExamBoard(currentExamFilter); } }
 
         function showTab(tabName, el) {
@@ -1612,7 +1656,8 @@
         }
         function kickUser(userId) {
             const t = usersDB.find(u => u.id === userId); if(!t) return;
-            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴'; window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
+            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴';
+            window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
         }
 
     </script>
