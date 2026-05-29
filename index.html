@@ -739,7 +739,7 @@
         </div>
     </div>
 
-    <!-- 🔥 기출 게시글(자료실) 다중 첨부파일 업로드 및 실제 다운로드 링크 처리 -->
+    <!-- 🔥 기출 게시글(자료실) 다중 첨부파일 업로드 -->
     <div class="modal-overlay" id="exam-modal" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close-btn" onclick="closeExamModal()">×</button>
@@ -751,8 +751,8 @@
             <textarea id="exam-content-input" placeholder="내용 및 기출 복기 작성" style="height:100px;"></textarea>
             
             <div style="border: 1px solid var(--border); padding: 10px; border-radius: 8px;">
-                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px; color:#dc3545;">🚨 50MB 이하의 파일 첨부 (Ctrl/Shift 키로 다중 선택 가능)</label>
-                <!-- 파일 선택 시 데이터를 변환하는 함수 연결 -->
+                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px; color:#dc3545;">🚨 50MB 이하의 파일 첨부 (Ctrl/Shift 키로 여러 개 선택)</label>
+                <!-- 🔥 실제 파일이 선택될 수 있도록 설정 -->
                 <input type="file" id="exam-file-input" multiple="multiple" style="padding:10px; border:1px solid var(--border); background:var(--bg-color); border-radius:8px; width:100%;" onchange="handleFileSelect(this)">
                 <div id="exam-file-list" style="margin-top:10px; font-size:0.85em; color:var(--accent); font-weight:bold; word-break: break-all;"></div>
             </div>
@@ -851,12 +851,12 @@
         </div>
     </div>
 
-    <!-- Firebase SDK (Storage 모듈 완전 연결) -->
+    <!-- 🔥 Firebase SDK (Storage 모듈 완전 연결) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-        // 🔥 Storage 모듈 추가
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
+        // 실제 파일 서버 연결 모듈
+        import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCQiE3QCEAo7p-wXQkatXQKMhaiXHcMEmI",
@@ -872,7 +872,7 @@
         
         // 전역에서 파일 업로드 함수를 쓸 수 있게 설정
         window.fbStorage = getStorage(app);
-        window.fbRef = ref;
+        window.fbSRef = sRef;
         window.fbUploadBytes = uploadBytes;
         window.fbGetDownloadURL = getDownloadURL;
 
@@ -1014,7 +1014,7 @@
             display.innerHTML = `<div class="org-box"><div class="org-title">담당 교수</div><div class="org-name">${orgChart.prof || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부장</div><div class="org-name" style="color:#007bff;">${orgChart.pres || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부 차장</div><div class="org-name" style="color:#28a745;">${orgChart.vpres || '-'}</div></div><div class="org-grid">${teamsHtml}</div>`;
         }
 
-        // UI 갱신 (권한, 버튼 표시 수정)
+        // UI 갱신 
         function updateAuthUI() {
             const isAuth = !!currentUser; 
             const role = isAuth ? currentUser.role : ''; 
@@ -1532,7 +1532,7 @@
                 const realIndex = posts[type].length - 1 - reverseIdx; const div = document.createElement('div'); div.className = 'post-item'; if(!p.replies) p.replies = [];
                 let delBtn = (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) ? `<button class="delete-btn" onclick="deletePost('${type}', ${realIndex})">삭제</button>` : '';
                 let dTitle = p.title, dContent = p.content, secretUnlocked = !p.isSecret;
-                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 입력 및 확인</button>`; }
+                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 확인</button>`; }
                 div.innerHTML = `
                     <div class="post-header-wrap"><div class="post-title" id="title-${type}-${realIndex}">${dTitle}</div>${delBtn}</div>
                     <div class="post-content" id="content-${type}-${realIndex}">${dContent}</div>
@@ -1581,7 +1581,7 @@
         function deletePost(type, idx) { if(confirm("삭제하시겠습니까?")) { posts[type].splice(idx, 1); window.syncDB(); renderPosts(type); } }
 
         // ==========================================
-        // 🔥 EXAM RESOURCES (기출자료 게시판) 파일 여러 개 선택 + 클릭 진짜 다운로드(Base64)
+        // 🔥 EXAM RESOURCES (기출자료 게시판) 진짜 다운로드 로직 추가
         // ==========================================
         let currentExamFilter = '전체';
         let examAccumulatedFiles = []; 
@@ -1590,26 +1590,26 @@
             for (let i = 0; i < input.files.length; i++) {
                 const file = input.files[i];
                 
-                // 🔥 데이터베이스 한도 보호용 (50MB 제한 상향)
+                // 50MB 용량 제한 검사
                 if (file.size > 50 * 1024 * 1024) { 
                     alert(`[${file.name}] 용량이 너무 큽니다. 50MB 이하만 가능합니다.`);
                     continue;
                 }
                 
+                // 파일 이름이 배열에 없으면 진짜 파일 데이터를 읽어서 보관
                 if(!examAccumulatedFiles.find(f => f.name === file.name)) {
-                    // 파일을 Base64 데이터로 변환하여 배열에 누적 저장
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         examAccumulatedFiles.push({
                             name: file.name,
-                            data: e.target.result // 실제 다운로드 될 파일 데이터
+                            data: e.target.result // 다운로드를 위한 실제 데이터(Base64)
                         });
                         document.getElementById('exam-file-list').innerText = "📎 첨부 대기 중: " + examAccumulatedFiles.map(f=>f.name).join(', ');
                     };
                     reader.readAsDataURL(file);
                 }
             }
-            input.value = ''; // 선택 창 초기화 (다른 파일 추가 선택 가능)
+            input.value = ''; // 같은 파일을 다시 올려도 처리되도록 파일 입력창 초기화
         }
 
         function filterExams(cat, el) { 
@@ -1625,24 +1625,18 @@
             list.innerHTML='';
             
             const filtered = (window.examPosts || []).filter(e => cat==='전체' || e.airline===cat);
+            if(filtered.length===0) { list.innerHTML='<div class="post-empty">업로드된 게시물이 없습니다.</div>'; return; }
             
-            document.getElementById('exam-back-btn').style.display = (cat !== '전체') ? 'inline-flex' : 'none';
-
-            if(filtered.length===0) { 
-                list.innerHTML='<div class="post-empty">업로드된 게시물이 없습니다.</div>'; 
-                return; 
-            }
-
             filtered.slice().reverse().forEach((p) => {
-                const rIdx = window.examPosts.findIndex(orig => orig.id === p.id); 
+                const rIdx = examPosts.findIndex(orig => orig.id === p.id); 
                 const div = document.createElement('div'); div.className = 'post-item';
                 let delBtn = (currentUser && (p.authorId === currentUser.id || ['학술부장', '학술부 차장'].includes(currentUser.role))) ? `<button class="delete-btn" onclick="deleteExam(${rIdx})">삭제</button>` : '';
                 
                 let attachHtml = '';
-                // 🔥 새로운 구조 (files 배열에 Base64 데이터가 있는 경우 - 클릭 시 다운로드 가능)
+                // 💡 files 배열이 있는 경우 (새로운 방식 - 진짜 다운로드 버튼)
                 if (p.files && p.files.length > 0) {
-                    let fileLinks = p.files.map(f => `<a href="${f.data}" download="${f.name}" style="color:var(--accent); text-decoration:underline; font-weight:bold; cursor:pointer;" title="클릭하여 파일 다운로드 또는 열기">${f.name}</a>`).join('<br>📎 ');
-                    attachHtml = `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:var(--text-color);">📎 <strong>첨부파일 (클릭 시 다운로드/열기):</strong><br>📎 ${fileLinks}</div>`;
+                    let fileLinks = p.files.map(f => `<a href="${f.data}" download="${f.name}" style="color:var(--accent); text-decoration:underline; font-weight:bold; cursor:pointer; display:inline-block; margin-top:4px;" title="클릭하여 파일 다운로드">${f.name}</a>`).join('<br>📎 ');
+                    attachHtml = `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:var(--text-color);">📎 <strong>첨부파일 (클릭 시 다운로드):</strong><br>📎 ${fileLinks}</div>`;
                 } 
                 // 예전 구조 (fileName 텍스트만 있는 경우)
                 else if (p.fileName) {
@@ -1652,7 +1646,7 @@
                 div.innerHTML = `
                     <div class="post-header-wrap"><div class="post-title"><span style="color:#007bff; margin-right:6px;">[${p.airline}]</span> ${p.title}</div>${delBtn}</div>
                     <div class="post-content">${p.content}${attachHtml}</div>
-                    <div class="post-meta"><span class="post-author" style="color:#28a745; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span class="post-date" style="color:#aaa; font-size:0.9em; margin-left:10px;">${p.date}</span></div>
+                    <div class="post-meta"><span class="post-author" style="color:#28a745; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span class="post-date">${p.date}</span></div>
                 `;
                 list.appendChild(div);
             });
@@ -1673,38 +1667,51 @@
             document.getElementById('exam-file-list').innerText = '';
         }
         
-        function submitExamPost() {
+        async function submitExamPost() {
             if(!currentUser) return alert('로그인 요망.'); const myPerm = rolePerms[currentUser.role] || {}; if(!myPerm.exam) return alert('업로드 권한이 없습니다.');
             const airline = document.getElementById('exam-airline-input').value; 
             const title = document.getElementById('exam-title-input').value.trim(); 
             const content = document.getElementById('exam-content-input').value.trim(); 
 
             if (!title || !content) return alert('제목, 내용 입력 요망.');
+            
+            const btn = document.getElementById('exam-upload-btn');
+            btn.innerText = '업로드 중... ⏳';
+            btn.disabled = true;
+
             const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
             
-            // 변환 완료된 파일(Base64) 배열을 깊은 복사하여 저장
-            const filesToSave = [...examAccumulatedFiles];
+            try {
+                // 배열에 누적된 진짜 파일 데이터 저장
+                const filesToSave = [...examAccumulatedFiles];
 
-            window.examPosts.push({ 
-                id: 'ep_' + new Date().getTime(), 
-                airline, 
-                title, 
-                content, 
-                files: filesToSave, // URL/데이터가 포함된 배열 저장
-                date, 
-                authorId: currentUser.id, 
-                authorNickname: currentUser.nickname, 
-                authorRole: currentUser.role 
-            });
-            
-            if (!['학술부 조장', '학술부 차장', '학술부장'].includes(currentUser.role)) notifications.push({ id: 'noti_sys_' + new Date().getTime(), title: "새로운 기출자료 등록", msg: `[${airline}] ${title}`, target: 'all', date, readBy: [], clearedBy: [] });
-            
-            window.syncDB(); 
-            closeExamModal(); 
-            renderExamBoard(currentExamFilter); 
+                examPosts.push({ 
+                    id: 'ep_' + new Date().getTime(), 
+                    airline, 
+                    title, 
+                    content, 
+                    files: filesToSave, // URL과 데이터가 포함된 객체
+                    date, 
+                    authorId: currentUser.id, 
+                    authorNickname: currentUser.nickname, 
+                    authorRole: currentUser.role 
+                });
+                
+                if (!['학술부 조장', '학술부 차장', '학술부장'].includes(currentUser.role)) notifications.push({ id: 'noti_sys_' + new Date().getTime(), title: "새로운 기출자료 등록", msg: `[${airline}] ${title}`, target: 'all', date, readBy: [], clearedBy: [] });
+                
+                window.syncDB(); 
+                closeExamModal(); 
+                renderExamBoard(currentExamFilter); 
+            } catch(e) {
+                console.error(e);
+                alert("업로드 실패! 용량을 확인해주세요.");
+            } finally {
+                btn.innerText = '업로드 완료';
+                btn.disabled = false;
+            }
         }
 
-        function deleteExam(index) { if(confirm("삭제하시겠습니까?")) { window.examPosts.splice(index, 1); window.syncDB(); renderExamBoard(currentExamFilter); } }
+        function deleteExam(index) { if(confirm("삭제하시겠습니까?")) { examPosts.splice(index, 1); window.syncDB(); renderExamBoard(currentExamFilter); } }
 
         function showTab(tabName, el) {
             document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none'); document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
