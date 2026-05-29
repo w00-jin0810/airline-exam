@@ -243,6 +243,7 @@
 </head>
 <body>
 
+    <!-- 인트로 화면 -->
     <div id="intro-screen">
         <div class="intro-center">
             <div class="intro-title">CDU 학술부</div>
@@ -254,8 +255,11 @@
         </div>
     </div>
 
+    <!-- 메인 컨텐츠 영역 -->
     <div id="main-content">
+        <!-- 상단 헤더 -->
         <header class="top-header">
+            <!-- 윗줄: 좌측 로고 / 우측 알림(🔔), 쪽지(✉️) -->
             <div class="header-top-row">
                 <div class="header-logos">
                     <img class="univ-logo" src="CDU_ROGO.jpg" alt="초당대 로고">
@@ -275,8 +279,10 @@
                 </div>
             </div>
             
+            <!-- 아랫줄: 중앙 메뉴 / 우측 내프로필, 설정, 권한관리 -->
             <div class="header-bottom-row">
-                <div class="header-bottom-left"></div> <nav class="header-nav">
+                <div class="header-bottom-left"></div> <!-- 대칭용 빈공간 -->
+                <nav class="header-nav">
                     <button class="nav-tab active" onclick="showTab('home', this)">HOME</button>
                     <button class="nav-tab" onclick="showTab('introduction', this)">INTRODUCTION</button>
                     <button class="nav-tab" onclick="showTab('create-session', this)">CREATE SESSION</button>
@@ -295,6 +301,7 @@
         </header>
 
         <main class="content-area">
+            <!-- 1. HOME -->
             <section id="tab-home" class="page-section active">
                 <div class="home-container">
                     <div class="card" style="margin-bottom: 0; padding-bottom: 15px;">
@@ -314,11 +321,13 @@
                         </div>
                     </div>
                 </div>
+                <!-- 하단 마퀴 -->
                 <div class="marquee-container home-marquee">
                     <div class="marquee-track" id="home-marquee-track"></div>
                 </div>
             </section>
 
+            <!-- 2. INTRODUCTION -->
             <section id="tab-introduction" class="page-section">
                 <div class="card">
                     <div class="section-title">학술부란?</div>
@@ -332,15 +341,18 @@
                 <div class="card" style="margin-top: 20px;">
                     <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
                         <span>📊 학술부 조직도</span>
+                        <!-- 부장 전용 조직도 수정 버튼 -->
                         <button id="btn-edit-org" class="btn-outline" style="display:none; border-color:var(--accent); color:var(--accent);" onclick="openOrgModal()">⚙️ 조직도 수정</button>
                     </div>
                     <div id="org-chart-display" class="org-chart-wrapper"></div>
                 </div>
             </section>
 
+            <!-- 3. CREATE SESSION (CBT 모의고사) 중앙 배치 -->
             <section id="tab-create-session" class="page-section">
                 <div class="cbt-container">
                     <div class="cbt-main">
+                        <!-- 대기 화면 -->
                         <div id="cbt-welcome-card" class="card" style="height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
                             <div class="cbt-tabs" style="width: 100%; max-width: 400px; margin-bottom: 30px;">
                                 <button class="cbt-tab active" id="tab-btn-cbt-airline" onclick="switchCbtTab('airline')">선택 학습</button>
@@ -350,6 +362,7 @@
                             <p style="color:#666; font-size:1em; line-height:1.6;">우측 메뉴에서 원하시는 학습 모드와 항공사를 선택하세요.<br>실전처럼 문제를 풀고 자동으로 오답노트를 생성할 수 있습니다.</p>
                         </div>
 
+                        <!-- 문제 풀이 화면 -->
                         <div id="cbt-solve-area" class="exam-solve-area" style="display:none;">
                             <div class="mark-circle" id="mark-circle">⭕</div>
                             <div class="mark-cross" id="mark-cross">❌</div>
@@ -374,6 +387,7 @@
                             </div>
                         </div>
 
+                        <!-- 결과 및 오답노트 -->
                         <div id="cbt-result-area" class="card" style="display:none;">
                             <div class="section-title">📊 채점 결과 및 오답 노트</div>
                             <h2 id="cbt-result-score" style="text-align:center; color:var(--accent); margin:20px 0;"></h2>
@@ -400,6 +414,7 @@
                             <select id="cbt-sel-year" class="cbt-dropdown"></select>
                             
                             <button class="btn-cbt" style="background:var(--accent); margin-top:10px;" onclick="startCbtAirline()">✏️ 학습 모드 시작</button>
+                            <!-- 문제수정 버튼 (관리자 전용) -->
                             <button id="btn-cbt-edit-list" class="btn-cbt" style="display:none; background:#ffc107; color:#333; margin-top:10px;" onclick="openCbtListModal()">📝 등록된 문제 관리 (수정/삭제)</button>
                         </div>
 
@@ -413,6 +428,7 @@
                             <button class="btn-cbt" style="background:#28a745; margin-top:10px;" onclick="startCbtMock()">⏱️ 실전 모의고사 시작</button>
                         </div>
 
+                        <!-- 신규 등록 (관리자 전용) -->
                         <div id="cbt-admin-controls" style="display:none;">
                             <hr style="border:0; border-top:1px dashed var(--border); margin:20px 0 10px 0;">
                             <button id="btn-cbt-manage" class="btn-cbt" style="background:#17a2b8;" onclick="openCbtManageModal()">⚙️ 문제 관리 (신규 등록)</button>
@@ -421,6 +437,7 @@
                 </div>
             </section>
 
+            <!-- 4. EXAM RESOURCES (기출자료 게시판 - 확장형) -->
             <section id="tab-exam" class="page-section">
                 <div class="exam-layout">
                     <div class="exam-main">
@@ -454,6 +471,7 @@
                 </div>
             </section>
 
+            <!-- 5. BOOKS -->
             <section id="tab-books" class="page-section">
                 <div class="card">
                     <div class="section-title">📚 항공 서적 다운로드</div>
@@ -462,6 +480,7 @@
                 </div>
             </section>
 
+            <!-- 6. COMMUNITY -->
             <section id="tab-community" class="page-section">
                 <div class="card" style="margin-bottom: 20px;">
                     <div class="notice-header">
@@ -515,6 +534,7 @@
                 </div>
             </section>
 
+            <!-- 7. ADMIN 관리 페이지 -->
             <section id="tab-admin" class="page-section">
                 <div class="card">
                     <div class="section-title">⏳ 가입 승인 대기 목록</div>
@@ -601,6 +621,10 @@
         </main>
     </div>
 
+    <!-- ==========================================
+       모달 (팝업창)
+       ========================================== -->
+    <!-- 설정 ⚙️ -->
     <div class="modal-overlay" id="settings-modal" style="display:none;">
         <div class="modal-box" style="max-width: 300px;">
             <button class="modal-close-btn" onclick="closeSettingsModal()">×</button>
@@ -618,6 +642,7 @@
         </div>
     </div>
 
+    <!-- 조직도 수정 (조 동적 추가 가능) -->
     <div class="modal-overlay" id="org-edit-modal" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close-btn" onclick="closeOrgModal()">×</button>
@@ -645,6 +670,7 @@
         </div>
     </div>
 
+    <!-- CBT 문제 목록 (수정/삭제용) -->
     <div class="modal-overlay" id="cbt-list-modal" style="display:none;">
         <div class="modal-box" style="max-width: 700px;">
             <button class="modal-close-btn" onclick="closeCbtListModal()">×</button>
@@ -654,6 +680,7 @@
         </div>
     </div>
 
+    <!-- CBT 문제 관리 (등록/수정) -->
     <div class="modal-overlay" id="cbt-manage-modal" style="display:none;">
         <div class="modal-box" style="max-width: 600px;">
             <button class="modal-close-btn" onclick="closeCbtManageModal()">×</button>
@@ -699,6 +726,7 @@
     </div>
 
 
+    <!-- 쪽지 보내기 -->
     <div class="modal-overlay" id="msg-modal" style="display:none;">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeMsgModal()">×</button>
@@ -711,6 +739,7 @@
         </div>
     </div>
 
+    <!-- 🔥 기출 게시글(자료실) 다중 첨부파일 업로드 및 실제 다운로드 링크 처리 -->
     <div class="modal-overlay" id="exam-modal" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close-btn" onclick="closeExamModal()">×</button>
@@ -722,7 +751,8 @@
             <textarea id="exam-content-input" placeholder="내용 및 기출 복기 작성" style="height:100px;"></textarea>
             
             <div style="border: 1px solid var(--border); padding: 10px; border-radius: 8px;">
-                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px; color:#dc3545;">🚨 1.5MB 이하의 파일만 첨부 가능합니다 (Ctrl/Shift 키로 여러 개 선택)</label>
+                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px; color:#dc3545;">🚨 50MB 이하의 파일 첨부 (Ctrl/Shift 키로 다중 선택 가능)</label>
+                <!-- 파일 선택 시 데이터를 변환하는 함수 연결 -->
                 <input type="file" id="exam-file-input" multiple="multiple" style="padding:10px; border:1px solid var(--border); background:var(--bg-color); border-radius:8px; width:100%;" onchange="handleFileSelect(this)">
                 <div id="exam-file-list" style="margin-top:10px; font-size:0.85em; color:var(--accent); font-weight:bold; word-break: break-all;"></div>
             </div>
@@ -734,6 +764,7 @@
         </div>
     </div>
 
+    <!-- 인증 -->
     <div class="modal-overlay" id="auth-modal" style="display:none;">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeAuthModal()">×</button>
@@ -768,6 +799,7 @@
         </div>
     </div>
 
+    <!-- 프로필 -->
     <div class="modal-overlay" id="profile-modal" style="display:none;">
         <div class="modal-box" style="max-width:350px;">
             <button class="modal-close-btn" onclick="closeProfileModal()">×</button>
@@ -786,6 +818,7 @@
         </div>
     </div>
 
+    <!-- 알림 모달 -->
     <div class="modal-overlay" id="noti-modal" style="display:none;">
         <div class="modal-box" style="max-width:400px;">
             <button class="modal-close-btn" onclick="closeNotiModal()">×</button>
@@ -795,6 +828,7 @@
         </div>
     </div>
 
+    <!-- 공지작성 모달 -->
     <div class="modal-overlay" id="notice-modal" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close-btn" onclick="closeNoticeModal()">×</button>
@@ -817,9 +851,12 @@
         </div>
     </div>
 
+    <!-- Firebase SDK (Storage 모듈 완전 연결) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        // 🔥 Storage 모듈 추가
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCQiE3QCEAo7p-wXQkatXQKMhaiXHcMEmI",
@@ -832,6 +869,13 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
+        // 전역에서 파일 업로드 함수를 쓸 수 있게 설정
+        window.fbStorage = getStorage(app);
+        window.fbRef = ref;
+        window.fbUploadBytes = uploadBytes;
+        window.fbGetDownloadURL = getDownloadURL;
+
         const mainDocRef = doc(db, "cdu_db_v5", "main_storage");
 
         onSnapshot(mainDocRef, (snap) => {
@@ -875,6 +919,7 @@
         };
     </script>
 
+    <!-- 자바스크립트 비즈니스 로직 -->
     <script>
         var AVAILABLE_ROLES = ['학생', '학술부 조장', '학술부 차장', '학술부장', '교수'];
         var rolePerms = {
@@ -1017,7 +1062,7 @@
                 if(cbtAdminControls) cbtAdminControls.style.display = 'none';
             }
             renderOrgChart(); renderNotices(); renderPosts('qna'); renderPosts('suggest');
-            if(document.getElementById('tab-exam').classList.contains('active')) renderExams(currentExamFilter);
+            if(document.getElementById('tab-exam').classList.contains('active')) renderExamBoard(currentExamFilter);
         }
 
         function startApp() { document.getElementById('intro-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'flex'; updateAuthUI(); }
@@ -1178,8 +1223,7 @@
         }
         function kickUser(userId) {
             const t = usersDB.find(u => u.id === userId); if(!t) return;
-            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴';
-            window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
+            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴'; window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
         }
 
         // 공지 롤링
@@ -1478,7 +1522,66 @@
         }
 
         // ==========================================
-        // 🔥 EXAM RESOURCES (기출자료 게시판) 파일 다중 업로드 & 다운로드
+        // 커뮤니티 게시판 (QnA, Suggest)
+        // ==========================================
+        function showComm(id, btn) { document.querySelectorAll('.comm-section').forEach(s=>s.style.display='none'); document.getElementById('comm-'+id).style.display='block'; document.querySelectorAll('.comm-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+        function renderPosts(type) {
+            const list = document.getElementById(type + '-list'); list.innerHTML = '';
+            if (posts[type].length === 0) { list.innerHTML = '<div class="post-empty">게시글이 없습니다.</div>'; return; }
+            posts[type].slice().reverse().forEach((p, reverseIdx) => {
+                const realIndex = posts[type].length - 1 - reverseIdx; const div = document.createElement('div'); div.className = 'post-item'; if(!p.replies) p.replies = [];
+                let delBtn = (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) ? `<button class="delete-btn" onclick="deletePost('${type}', ${realIndex})">삭제</button>` : '';
+                let dTitle = p.title, dContent = p.content, secretUnlocked = !p.isSecret;
+                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 입력 및 확인</button>`; }
+                div.innerHTML = `
+                    <div class="post-header-wrap"><div class="post-title" id="title-${type}-${realIndex}">${dTitle}</div>${delBtn}</div>
+                    <div class="post-content" id="content-${type}-${realIndex}">${dContent}</div>
+                    <div class="post-meta"><span class="post-author" style="color:#007bff; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span>${p.date}</span></div>
+                    <div id="reply-area-${type}-${realIndex}" style="display: ${secretUnlocked ? 'block' : 'none'};">${renderRepliesHtml(p.replies, type, realIndex)}${getReplyInputHtml(type, realIndex, p.isSecret)}</div>
+                `; list.appendChild(div);
+            });
+        }
+        function renderRepliesHtml(replies) {
+            if(!replies || replies.length === 0) return ''; let html = '<div class="reply-box">';
+            replies.forEach(r => { html += `<div class="reply-item">↳ <span class="reply-author">[RE / ${r.authorRole}] ${r.authorNickname}</span> : <span>${r.content}</span><span style="color:#aaa; font-size:0.8em; margin-left:8px;">${r.date}</span></div>`; }); return html + '</div>';
+        }
+        function getReplyInputHtml(type, index, isSecret) {
+            if(!currentUser) return ''; const myPerm = rolePerms[currentUser.role] || {};
+            if (isSecret && !myPerm.secretRead) return ''; if (!myPerm.board) return '';
+            return `<div class="reply-input-wrapper"><input type="text" id="reply-input-${type}-${index}" placeholder="답글 작성..."><button class="primary-btn" style="padding:6px 12px; font-size:0.85em;" onclick="submitReply('${type}', ${index})">답글 달기</button></div>`;
+        }
+        function submitReply(type, pIdx) {
+            const content = document.getElementById(`reply-input-${type}-${pIdx}`).value.trim(); if(!content) return alert('답글 입력 요망.');
+            const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
+            posts[type][pIdx].replies.push({ content, date, authorId: currentUser.id, authorNickname: currentUser.nickname, authorRole: currentUser.role });
+            const orgAuthor = posts[type][pIdx].authorId;
+            if (orgAuthor !== currentUser.id) notifications.push({ id: 'noti_re_' + new Date().getTime(), title: "내 게시글에 답글이 달렸습니다.", msg: `[RE] ${content}`, target: [orgAuthor], date: date, readBy: [], clearedBy: [] });
+            window.syncDB(); renderPosts(type);
+            const post = posts[type][pIdx];
+            if(post.isSecret && (rolePerms[currentUser.role]||{}).secretRead) { document.getElementById(`title-${type}-${pIdx}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${post.title}`; document.getElementById(`content-${type}-${pIdx}`).innerText = post.content; document.getElementById(`reply-area-${type}-${pIdx}`).style.display = 'block'; }
+        }
+        function unlockSecretPost(type, index) {
+            if(!currentUser) return alert('로그인 요망.'); const p = posts[type][index];
+            if ((rolePerms[currentUser.role]||{}).secretRead || p.authorId === currentUser.id) {
+                if(p.authorId !== currentUser.id) alert("비밀글 열람 권한이 있어 내용이 공개됩니다.");
+                document.getElementById(`title-${type}-${index}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${p.title}`; document.getElementById(`content-${type}-${index}`).innerText = p.content; document.getElementById(`reply-area-${type}-${index}`).style.display = 'block'; return;
+            }
+            const entered = prompt("작성자의 로그인 비밀번호 입력:"); if(entered === null) return;
+            const author = usersDB.find(u => u.id === p.authorId);
+            if(author && entered === author.password) { document.getElementById(`title-${type}-${index}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${p.title}`; document.getElementById(`content-${type}-${index}`).innerText = p.content; document.getElementById(`reply-area-${type}-${index}`).style.display = 'block'; } else alert("비밀번호 불일치/열람권한 없음.");
+        }
+        function submitPost(type) {
+            if(!currentUser) return alert('로그인 요망.'); if(!(rolePerms[currentUser.role]||{}).board) return alert('작성 권한 없음.');
+            const title = document.getElementById(type + '-title').value.trim(); const content = document.getElementById(type + '-content').value.trim(); const isSecret = document.getElementById(type + '-is-secret').checked;
+            if (!title || !content) return alert('내용 입력 요망.'); if (isSecret && prompt("🔒 본인의 비밀번호를 한 번 더 입력해주세요.") !== currentUser.password) return alert("취소됨.");
+            const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
+            posts[type].push({ title, content, date, isSecret, replies: [], authorId: currentUser.id, authorNickname: currentUser.nickname, authorRole: currentUser.role });
+            window.syncDB(); document.getElementById(type+'-title').value=''; document.getElementById(type+'-content').value=''; document.getElementById(type+'-is-secret').checked=false; renderPosts(type);
+        }
+        function deletePost(type, idx) { if(confirm("삭제하시겠습니까?")) { posts[type].splice(idx, 1); window.syncDB(); renderPosts(type); } }
+
+        // ==========================================
+        // 🔥 EXAM RESOURCES (기출자료 게시판) 파일 여러 개 선택 + 클릭 진짜 다운로드(Base64)
         // ==========================================
         let currentExamFilter = '전체';
         let examAccumulatedFiles = []; 
@@ -1487,26 +1590,26 @@
             for (let i = 0; i < input.files.length; i++) {
                 const file = input.files[i];
                 
-                // 데이터베이스 한도 보호용 (800KB 제한)
-                if (file.size > 800 * 1024) { 
-                    alert(`[${file.name}] 용량이 너무 큽니다. 원활한 저장을 위해 800KB 이하만 가능합니다.`);
+                // 🔥 데이터베이스 한도 보호용 (50MB 제한 상향)
+                if (file.size > 50 * 1024 * 1024) { 
+                    alert(`[${file.name}] 용량이 너무 큽니다. 50MB 이하만 가능합니다.`);
                     continue;
                 }
                 
                 if(!examAccumulatedFiles.find(f => f.name === file.name)) {
-                    // 파일을 Base64 문자열로 변환하여 배열에 누적
+                    // 파일을 Base64 데이터로 변환하여 배열에 누적 저장
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         examAccumulatedFiles.push({
                             name: file.name,
-                            data: e.target.result
+                            data: e.target.result // 실제 다운로드 될 파일 데이터
                         });
                         document.getElementById('exam-file-list').innerText = "📎 첨부 대기 중: " + examAccumulatedFiles.map(f=>f.name).join(', ');
                     };
                     reader.readAsDataURL(file);
                 }
             }
-            input.value = ''; // 같은 파일을 다시 올려도 트리거 되도록 초기화
+            input.value = ''; // 선택 창 초기화 (다른 파일 추가 선택 가능)
         }
 
         function filterExams(cat, el) { 
@@ -1522,21 +1625,24 @@
             list.innerHTML='';
             
             const filtered = (window.examPosts || []).filter(e => cat==='전체' || e.airline===cat);
+            
+            document.getElementById('exam-back-btn').style.display = (cat !== '전체') ? 'inline-flex' : 'none';
+
             if(filtered.length===0) { 
                 list.innerHTML='<div class="post-empty">업로드된 게시물이 없습니다.</div>'; 
                 return; 
             }
 
             filtered.slice().reverse().forEach((p) => {
-                const rIdx = examPosts.findIndex(orig => orig.id === p.id); 
+                const rIdx = window.examPosts.findIndex(orig => orig.id === p.id); 
                 const div = document.createElement('div'); div.className = 'post-item';
                 let delBtn = (currentUser && (p.authorId === currentUser.id || ['학술부장', '학술부 차장'].includes(currentUser.role))) ? `<button class="delete-btn" onclick="deleteExam(${rIdx})">삭제</button>` : '';
                 
                 let attachHtml = '';
-                // 새로운 구조 (files 배열에 Base64 데이터가 있는 경우 - 진짜 다운로드 링크)
+                // 🔥 새로운 구조 (files 배열에 Base64 데이터가 있는 경우 - 클릭 시 다운로드 가능)
                 if (p.files && p.files.length > 0) {
-                    let fileLinks = p.files.map(f => `<a href="${f.data}" download="${f.name}" style="color:var(--accent); text-decoration:underline; font-weight:bold; cursor:pointer;" title="클릭하여 파일 다운로드">${f.name}</a>`).join('<br>📎 ');
-                    attachHtml = `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:var(--text-color);">📎 <strong>첨부파일 (클릭 시 다운로드):</strong><br>📎 ${fileLinks}</div>`;
+                    let fileLinks = p.files.map(f => `<a href="${f.data}" download="${f.name}" style="color:var(--accent); text-decoration:underline; font-weight:bold; cursor:pointer;" title="클릭하여 파일 다운로드 또는 열기">${f.name}</a>`).join('<br>📎 ');
+                    attachHtml = `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:var(--text-color);">📎 <strong>첨부파일 (클릭 시 다운로드/열기):</strong><br>📎 ${fileLinks}</div>`;
                 } 
                 // 예전 구조 (fileName 텍스트만 있는 경우)
                 else if (p.fileName) {
@@ -1546,7 +1652,7 @@
                 div.innerHTML = `
                     <div class="post-header-wrap"><div class="post-title"><span style="color:#007bff; margin-right:6px;">[${p.airline}]</span> ${p.title}</div>${delBtn}</div>
                     <div class="post-content">${p.content}${attachHtml}</div>
-                    <div class="post-meta"><span class="post-author" style="color:#28a745; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span class="post-date">${p.date}</span></div>
+                    <div class="post-meta"><span class="post-author" style="color:#28a745; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span class="post-date" style="color:#aaa; font-size:0.9em; margin-left:10px;">${p.date}</span></div>
                 `;
                 list.appendChild(div);
             });
@@ -1576,15 +1682,15 @@
             if (!title || !content) return alert('제목, 내용 입력 요망.');
             const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
             
-            // 변환 완료된 파일 배열을 깊은 복사하여 저장
+            // 변환 완료된 파일(Base64) 배열을 깊은 복사하여 저장
             const filesToSave = [...examAccumulatedFiles];
 
-            examPosts.push({ 
+            window.examPosts.push({ 
                 id: 'ep_' + new Date().getTime(), 
                 airline, 
                 title, 
                 content, 
-                files: filesToSave, 
+                files: filesToSave, // URL/데이터가 포함된 배열 저장
                 date, 
                 authorId: currentUser.id, 
                 authorNickname: currentUser.nickname, 
@@ -1593,10 +1699,12 @@
             
             if (!['학술부 조장', '학술부 차장', '학술부장'].includes(currentUser.role)) notifications.push({ id: 'noti_sys_' + new Date().getTime(), title: "새로운 기출자료 등록", msg: `[${airline}] ${title}`, target: 'all', date, readBy: [], clearedBy: [] });
             
-            window.syncDB(); closeExamModal(); renderExamBoard(currentExamFilter); 
+            window.syncDB(); 
+            closeExamModal(); 
+            renderExamBoard(currentExamFilter); 
         }
 
-        function deleteExam(index) { if(confirm("삭제하시겠습니까?")) { examPosts.splice(index, 1); window.syncDB(); renderExamBoard(currentExamFilter); } }
+        function deleteExam(index) { if(confirm("삭제하시겠습니까?")) { window.examPosts.splice(index, 1); window.syncDB(); renderExamBoard(currentExamFilter); } }
 
         function showTab(tabName, el) {
             document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none'); document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
