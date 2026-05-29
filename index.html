@@ -101,7 +101,7 @@
         .video-wrapper { width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
         
-        /* 홈 화면 내 마퀴 (간격 제거용 flex 설정 적용) */
+        /* 홈 화면 내 마퀴 */
         .home-marquee { background: rgba(0,0,0,0.05); margin-top: 10px; border-radius: 12px; border: 1px solid var(--border); position: relative; padding: 5px 0; overflow:hidden;}
 
         /* --- INTRODUCTION --- */
@@ -722,14 +722,14 @@
             <textarea id="exam-content-input" placeholder="내용 및 기출 복기 작성" style="height:100px;"></textarea>
             
             <div style="border: 1px solid var(--border); padding: 10px; border-radius: 8px;">
-                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px;">첨부파일 등록 (계속해서 추가로 선택 가능합니다)</label>
+                <label style="font-size:0.85em; font-weight:bold; display:block; margin-bottom:6px; color:#dc3545;">🚨 1.5MB 이하의 파일만 첨부 가능합니다 (Ctrl/Shift 키로 여러 개 선택)</label>
                 <input type="file" id="exam-file-input" multiple="multiple" style="padding:10px; border:1px solid var(--border); background:var(--bg-color); border-radius:8px; width:100%;" onchange="handleFileSelect(this)">
-                <div id="exam-file-list" style="margin-top:10px; font-size:0.85em; color:var(--accent); font-weight:bold;"></div>
+                <div id="exam-file-list" style="margin-top:10px; font-size:0.85em; color:var(--accent); font-weight:bold; word-break: break-all;"></div>
             </div>
 
             <div class="modal-btns">
                 <button class="cancel-btn" onclick="closeExamModal()">취소</button>
-                <button class="confirm-btn" onclick="submitExamPost()">업로드 완료</button>
+                <button class="confirm-btn" onclick="submitExamPost()" id="exam-upload-btn">업로드 완료</button>
             </div>
         </div>
     </div>
@@ -969,7 +969,7 @@
             display.innerHTML = `<div class="org-box"><div class="org-title">담당 교수</div><div class="org-name">${orgChart.prof || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부장</div><div class="org-name" style="color:#007bff;">${orgChart.pres || '-'}</div></div><div class="org-box" style="margin: 0 auto 15px; width: 60%;"><div class="org-title">학술부 차장</div><div class="org-name" style="color:#28a745;">${orgChart.vpres || '-'}</div></div><div class="org-grid">${teamsHtml}</div>`;
         }
 
-        // UI 갱신
+        // UI 갱신 (권한, 버튼 표시 수정)
         function updateAuthUI() {
             const isAuth = !!currentUser; 
             const role = isAuth ? currentUser.role : ''; 
@@ -1017,9 +1017,7 @@
                 if(cbtAdminControls) cbtAdminControls.style.display = 'none';
             }
             renderOrgChart(); renderNotices(); renderPosts('qna'); renderPosts('suggest');
-            
-            // 🔥 게시물이 바로 뜨도록 renderExams 무조건 호출!
-            renderExams(currentExamFilter);
+            if(document.getElementById('tab-exam').classList.contains('active')) renderExams(currentExamFilter);
         }
 
         function startApp() { document.getElementById('intro-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'flex'; updateAuthUI(); }
@@ -1180,7 +1178,8 @@
         }
         function kickUser(userId) {
             const t = usersDB.find(u => u.id === userId); if(!t) return;
-            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴'; window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
+            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴';
+            window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
         }
 
         // 공지 롤링
@@ -1479,37 +1478,78 @@
         }
 
         // ==========================================
-        // EXAM RESOURCES 게시판 렌더링 및 다중 업로드 기능
+        // 🔥 EXAM RESOURCES (기출자료 게시판) 파일 다중 업로드 & 다운로드
         // ==========================================
         let currentExamFilter = '전체';
-        function filterExams(cat, el) { currentExamFilter = cat; document.querySelectorAll('.exam-cat-btn').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); renderExamBoard(cat); }
+        let examAccumulatedFiles = []; 
 
+        function handleFileSelect(input) {
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+                
+                // 데이터베이스 한도 보호용 (800KB 제한)
+                if (file.size > 800 * 1024) { 
+                    alert(`[${file.name}] 용량이 너무 큽니다. 원활한 저장을 위해 800KB 이하만 가능합니다.`);
+                    continue;
+                }
+                
+                if(!examAccumulatedFiles.find(f => f.name === file.name)) {
+                    // 파일을 Base64 문자열로 변환하여 배열에 누적
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        examAccumulatedFiles.push({
+                            name: file.name,
+                            data: e.target.result
+                        });
+                        document.getElementById('exam-file-list').innerText = "📎 첨부 대기 중: " + examAccumulatedFiles.map(f=>f.name).join(', ');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            input.value = ''; // 같은 파일을 다시 올려도 트리거 되도록 초기화
+        }
+
+        function filterExams(cat, el) { 
+            currentExamFilter = cat; 
+            document.querySelectorAll('.exam-cat-btn').forEach(b=>b.classList.remove('active')); 
+            if(el) el.classList.add('active'); 
+            renderExamBoard(cat); 
+        }
+        
         function renderExamBoard(cat) {
-            document.getElementById('exam-board-title').innerText = `항공사 기출자료 게시판 (${cat})`; 
+            document.getElementById('exam-board-title').innerText = `항공사 기출자료실 (${cat})`; 
             const list = document.getElementById('exam-list'); 
             list.innerHTML='';
+            
             const filtered = (window.examPosts || []).filter(e => cat==='전체' || e.airline===cat);
-            if(filtered.length===0) { list.innerHTML='<div class="post-empty">업로드된 게시물이 없습니다.</div>'; return; }
+            if(filtered.length===0) { 
+                list.innerHTML='<div class="post-empty">업로드된 게시물이 없습니다.</div>'; 
+                return; 
+            }
+
             filtered.slice().reverse().forEach((p) => {
                 const rIdx = examPosts.findIndex(orig => orig.id === p.id); 
                 const div = document.createElement('div'); div.className = 'post-item';
                 let delBtn = (currentUser && (p.authorId === currentUser.id || ['학술부장', '학술부 차장'].includes(currentUser.role))) ? `<button class="delete-btn" onclick="deleteExam(${rIdx})">삭제</button>` : '';
-                let attachHtml = p.fileName ? `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:var(--text-color);">📎 <strong>첨부파일:</strong> ${p.fileName}</div>` : '';
-                div.innerHTML = `<div class="post-header-wrap"><div class="post-title"><span style="color:#007bff; margin-right:6px;">[${p.airline}]</span> ${p.title}</div>${delBtn}</div><div class="post-content">${p.content}${attachHtml}</div><div class="post-meta"><span class="post-author" style="color:#28a745; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span class="post-date">${p.date}</span></div>`;
+                
+                let attachHtml = '';
+                // 새로운 구조 (files 배열에 Base64 데이터가 있는 경우 - 진짜 다운로드 링크)
+                if (p.files && p.files.length > 0) {
+                    let fileLinks = p.files.map(f => `<a href="${f.data}" download="${f.name}" style="color:var(--accent); text-decoration:underline; font-weight:bold; cursor:pointer;" title="클릭하여 파일 다운로드">${f.name}</a>`).join('<br>📎 ');
+                    attachHtml = `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:var(--text-color);">📎 <strong>첨부파일 (클릭 시 다운로드):</strong><br>📎 ${fileLinks}</div>`;
+                } 
+                // 예전 구조 (fileName 텍스트만 있는 경우)
+                else if (p.fileName) {
+                    attachHtml = `<div style="margin-top:10px; padding:10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.85em; color:#888;">📎 <strong>기존 첨부(텍스트):</strong> ${p.fileName}</div>`;
+                }
+
+                div.innerHTML = `
+                    <div class="post-header-wrap"><div class="post-title"><span style="color:#007bff; margin-right:6px;">[${p.airline}]</span> ${p.title}</div>${delBtn}</div>
+                    <div class="post-content">${p.content}${attachHtml}</div>
+                    <div class="post-meta"><span class="post-author" style="color:#28a745; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span class="post-date">${p.date}</span></div>
+                `;
                 list.appendChild(div);
             });
-        }
-
-        // 🔥 다중 파일 이름 추출 로직 (여러 개 첨부 지원)
-        let examAccumulatedFiles = []; 
-        function handleFileSelect(input) {
-            for (let i = 0; i < input.files.length; i++) {
-                if(!examAccumulatedFiles.includes(input.files[i].name)) {
-                    examAccumulatedFiles.push(input.files[i].name);
-                }
-            }
-            document.getElementById('exam-file-list').innerText = "📎 첨부 대기 중: " + examAccumulatedFiles.join(', ');
-            input.value = ''; // 같은 파일을 다시 올려도 트리거 되도록 초기화
         }
 
         function openExamModal() { 
@@ -1532,84 +1572,38 @@
             const airline = document.getElementById('exam-airline-input').value; 
             const title = document.getElementById('exam-title-input').value.trim(); 
             const content = document.getElementById('exam-content-input').value.trim(); 
-            
-            // 누적된 다중 파일명
-            const fileName = examAccumulatedFiles.join(', ');
 
             if (!title || !content) return alert('제목, 내용 입력 요망.');
             const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
-            examPosts.push({ id: 'ep_' + new Date().getTime(), airline, title, content, fileName, date, authorId: currentUser.id, authorNickname: currentUser.nickname, authorRole: currentUser.role });
+            
+            // 변환 완료된 파일 배열을 깊은 복사하여 저장
+            const filesToSave = [...examAccumulatedFiles];
+
+            examPosts.push({ 
+                id: 'ep_' + new Date().getTime(), 
+                airline, 
+                title, 
+                content, 
+                files: filesToSave, 
+                date, 
+                authorId: currentUser.id, 
+                authorNickname: currentUser.nickname, 
+                authorRole: currentUser.role 
+            });
+            
             if (!['학술부 조장', '학술부 차장', '학술부장'].includes(currentUser.role)) notifications.push({ id: 'noti_sys_' + new Date().getTime(), title: "새로운 기출자료 등록", msg: `[${airline}] ${title}`, target: 'all', date, readBy: [], clearedBy: [] });
-            window.syncDB(); closeExamModal(); renderExams(currentExamFilter);
+            
+            window.syncDB(); closeExamModal(); renderExamBoard(currentExamFilter); 
         }
 
-        function deleteExam(index) { if(confirm("삭제하시겠습니까?")) { examPosts.splice(index, 1); window.syncDB(); renderExams(currentExamFilter); } }
+        function deleteExam(index) { if(confirm("삭제하시겠습니까?")) { examPosts.splice(index, 1); window.syncDB(); renderExamBoard(currentExamFilter); } }
 
         function showTab(tabName, el) {
             document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none'); document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + tabName).style.display = 'block'; if (el) el.classList.add('active');
-            if (tabName === 'exam') renderExams(currentExamFilter);
+            if (tabName === 'exam') renderExamBoard(currentExamFilter);
             if (tabName === 'create-session') initCbtSelects();
         }
-
-        // ==========================================
-        // 커뮤니티 게시판 (QnA, Suggest)
-        // ==========================================
-        function showComm(id, btn) { document.querySelectorAll('.comm-section').forEach(s=>s.style.display='none'); document.getElementById('comm-'+id).style.display='block'; document.querySelectorAll('.comm-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
-        function renderPosts(type) {
-            const list = document.getElementById(type + '-list'); list.innerHTML = '';
-            if (posts[type].length === 0) { list.innerHTML = '<div class="post-empty">게시글이 없습니다.</div>'; return; }
-            posts[type].slice().reverse().forEach((p, reverseIdx) => {
-                const realIndex = posts[type].length - 1 - reverseIdx; const div = document.createElement('div'); div.className = 'post-item'; if(!p.replies) p.replies = [];
-                let delBtn = (currentUser && (p.authorId === currentUser.id || currentUser.role === '학술부장')) ? `<button class="delete-btn" onclick="deletePost('${type}', ${realIndex})">삭제</button>` : '';
-                let dTitle = p.title, dContent = p.content, secretUnlocked = !p.isSecret;
-                if (p.isSecret) { dTitle = `<span style="color:#d9534f;">🔒 비밀글입니다.</span>`; dContent = `<button class="btn-outline" style="border-color:#64748b; color:#64748b;" onclick="unlockSecretPost('${type}', ${realIndex})">비밀번호 확인</button>`; }
-                div.innerHTML = `
-                    <div class="post-header-wrap"><div class="post-title" id="title-${type}-${realIndex}">${dTitle}</div>${delBtn}</div>
-                    <div class="post-content" id="content-${type}-${realIndex}">${dContent}</div>
-                    <div class="post-meta"><span class="post-author" style="color:#007bff; font-weight:bold;">[${p.authorRole}] ${p.authorNickname}</span><span>${p.date}</span></div>
-                    <div id="reply-area-${type}-${realIndex}" style="display: ${secretUnlocked ? 'block' : 'none'};">${renderRepliesHtml(p.replies, type, realIndex)}${getReplyInputHtml(type, realIndex, p.isSecret)}</div>
-                `; list.appendChild(div);
-            });
-        }
-        function renderRepliesHtml(replies) {
-            if(!replies || replies.length === 0) return ''; let html = '<div class="reply-box">';
-            replies.forEach(r => { html += `<div class="reply-item">↳ <span class="reply-author">[RE / ${r.authorRole}] ${r.authorNickname}</span> : <span>${r.content}</span><span style="color:#aaa; font-size:0.8em; margin-left:8px;">${r.date}</span></div>`; }); return html + '</div>';
-        }
-        function getReplyInputHtml(type, index, isSecret) {
-            if(!currentUser) return ''; const myPerm = rolePerms[currentUser.role] || {};
-            if (isSecret && !myPerm.secretRead) return ''; if (!myPerm.board) return '';
-            return `<div class="reply-input-wrapper"><input type="text" id="reply-input-${type}-${index}" placeholder="답글 작성..."><button class="primary-btn" style="padding:6px 12px; font-size:0.85em;" onclick="submitReply('${type}', ${index})">답글 달기</button></div>`;
-        }
-        function submitReply(type, pIdx) {
-            const content = document.getElementById(`reply-input-${type}-${pIdx}`).value.trim(); if(!content) return alert('답글 입력 요망.');
-            const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
-            posts[type][pIdx].replies.push({ content, date, authorId: currentUser.id, authorNickname: currentUser.nickname, authorRole: currentUser.role });
-            const orgAuthor = posts[type][pIdx].authorId;
-            if (orgAuthor !== currentUser.id) notifications.push({ id: 'noti_re_' + new Date().getTime(), title: "내 게시글에 답글이 달렸습니다.", msg: `[RE] ${content}`, target: [orgAuthor], date: date, readBy: [], clearedBy: [] });
-            window.syncDB(); renderPosts(type);
-            const post = posts[type][pIdx];
-            if(post.isSecret && (rolePerms[currentUser.role]||{}).secretRead) { document.getElementById(`title-${type}-${pIdx}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${post.title}`; document.getElementById(`content-${type}-${pIdx}`).innerText = post.content; document.getElementById(`reply-area-${type}-${pIdx}`).style.display = 'block'; }
-        }
-        function unlockSecretPost(type, index) {
-            if(!currentUser) return alert('로그인 요망.'); const p = posts[type][index];
-            if ((rolePerms[currentUser.role]||{}).secretRead || p.authorId === currentUser.id) {
-                if(p.authorId !== currentUser.id) alert("비밀글 열람 권한이 있어 내용이 공개됩니다.");
-                document.getElementById(`title-${type}-${index}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${p.title}`; document.getElementById(`content-${type}-${index}`).innerText = p.content; document.getElementById(`reply-area-${type}-${index}`).style.display = 'block'; return;
-            }
-            const entered = prompt("작성자의 로그인 비밀번호 입력:"); if(entered === null) return;
-            const author = usersDB.find(u => u.id === p.authorId);
-            if(author && entered === author.password) { document.getElementById(`title-${type}-${index}`).innerHTML = `<span style="color:#d9534f;">🔒</span> ${p.title}`; document.getElementById(`content-${type}-${index}`).innerText = p.content; document.getElementById(`reply-area-${type}-${index}`).style.display = 'block'; } else alert("비밀번호 불일치/열람권한 없음.");
-        }
-        function submitPost(type) {
-            if(!currentUser) return alert('로그인 요망.'); if(!(rolePerms[currentUser.role]||{}).board) return alert('작성 권한 없음.');
-            const title = document.getElementById(type + '-title').value.trim(); const content = document.getElementById(type + '-content').value.trim(); const isSecret = document.getElementById(type + '-is-secret').checked;
-            if (!title || !content) return alert('내용 입력 요망.'); if (isSecret && prompt("🔒 본인의 비밀번호를 한 번 더 입력해주세요.") !== currentUser.password) return alert("취소됨.");
-            const date = `${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
-            posts[type].push({ title, content, date, isSecret, replies: [], authorId: currentUser.id, authorNickname: currentUser.nickname, authorRole: currentUser.role });
-            window.syncDB(); document.getElementById(type+'-title').value=''; document.getElementById(type+'-content').value=''; document.getElementById(type+'-is-secret').checked=false; renderPosts(type);
-        }
-        function deletePost(type, idx) { if(confirm("삭제하시겠습니까?")) { posts[type].splice(idx, 1); window.syncDB(); renderPosts(type); } }
 
         // 백오피스 관리자 설정
         function renderAdminRoleSettings() {
@@ -1658,8 +1652,7 @@
         }
         function kickUser(userId) {
             const t = usersDB.find(u => u.id === userId); if(!t) return;
-            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴';
-            window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
+            const reason = prompt(`[${t.nickname}] 강제 탈퇴 사유를 작성해주세요.`); if(reason === null) return; t.status = 'kicked'; t.kickReason = reason.trim() || '관리자 강제 탈퇴'; window.syncDB(); alert('강제 탈퇴 완료.'); renderAdminUserLists();
         }
 
     </script>
